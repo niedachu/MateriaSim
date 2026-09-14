@@ -3,7 +3,7 @@ type: implementation-plan
 status: active
 plan_kind: implementation-plan
 created: 2026-09-14
-last_updated: 2026-09-14
+last_updated: 2026-09-15
 revision: 5
 owner: materials_simulation
 scope: 多组分液体、聚合物溶液与熔体、选定固相与界面；模型约束、运行重构及分层验收
@@ -45,6 +45,8 @@ M4、M5 在 M1—M3 的交接约定稳定后可分别推进；不要求先完成
 - 证据与具体限制见 [M1 验收记录](../../materials_simulation/docs/2026-09-14__m1-core-acceptance.md)。运行数据在独立临时工程目录，未作为长期科研归档。
 
 ## 2. 与总体方案和当前实现的关系
+
+架构与研究组织补充方案：[基础组件、场景流程与统一研究包](2026-09-15__architecture__simulation-package-and-research-bundles__implementation-plan.md)。该草案管理可安装包、共享资产、研究任务编排与分阶段目录迁移；目前仅编写方案，不改变本文 M1—M6 进度。后续批准实施时，本文暂不搬目录的阶段安排按该方案协调，历史验收事实保持不变。
 
 执行资源补充方案：[CPU 测试与小任务、GPU 主力计算](2026-09-14__execution__cpu-gpu-runtime__implementation-plan.md)。该方案于 2026-09-14 新增，当前仅为草案：先在无 GPU 的 Mac 上实现和验证共用执行层，再在 Linux 服务器验收 GPU。它不改变本文 M1—M6 的材料能力进度，也不表示正式长任务或 GPU 已实现。
 

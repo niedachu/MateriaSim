@@ -3,7 +3,7 @@ type: implementation-plan
 status: draft
 plan_kind: implementation-plan
 created: 2026-09-14
-last_updated: 2026-09-14
+last_updated: 2026-09-15
 owner: materials_simulation
 scope: 无 GPU 环境下实现 CPU/GPU 共用执行层、受控长任务与服务器验收准备
 implementation_status: 仅方案；未实施；本机无可供本任务验收的 GPU，Linux/GPU 待服务器实测
@@ -22,6 +22,8 @@ supersedes: []
 本方案是[多组分＋多场景实施方案](2026-09-14__multicomponent-multiscenario__implementation-plan.md)的执行层补充，不替代其材料扩展主线，也不把 M3—M6 未完成能力标记为完成。当前仅授权编写文档；后续实施、安装和实际计算分别按授权执行。
 
 ### 1.1 首版边界
+
+目录与研究任务组织参见[基础组件、场景流程与统一研究包方案](2026-09-15__architecture__simulation-package-and-research-bundles__implementation-plan.md)。后续迁移仍复用本文的一套执行核心与 ExecutionProfile，不复制研究包 runner；本文旧源码路径属于当前基线，迁移时按责任映射更新。Run 格式升级统一设计一次，目录迁移不额外制造另一套 v3。两份方案目前均不表示相关功能已实施。
 
 - 运行方式：原生 macOS/Linux、单机 GROMACS；CPU 或单 GPU 配合 CPU。
 - Mac：开发、输入检查、CPU 短测及已有支持范围内的小任务。
