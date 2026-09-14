@@ -1,0 +1,20 @@
+{
+  "id": "packed_mixture_gaff2_tip3p",
+  "engine": "gromacs",
+  "force_field": "amber14sb.ff",
+  "library_hash": "c073cc4a461823a4cfdf0413b6a20f5b631c0122c5575c543fcf04fd0ab48503",
+  "water_model": "tip3p",
+  "validation_scope": "engineering_only",
+  "model_hashes": {
+    "CAT": "773e93edf52d8196cdae5cca564133d881ae3ffe44f7e59b99cd3a26f602b04e",
+    "ANI": "07787d74e7e2af20252598aad5192f2ae9836f087128ea03d705ec5cd9c43c04",
+    "ZIL": "93b2af5681cc47df91690d0c054604726bd17cea480610a7d7d7d05ebff1f172"
+  },
+  "files": [
+    {
+      "name": "gaff2_atomtypes.itp",
+      "source": "../../ion_pair_hydration_md/topology/gaff2_atomtypes.itp",
+      "sha256": "728655aa76aeeb6c463ac62d8462686f6162a7166803c14aafdb21607129f593"
+    }
+  ]
+}

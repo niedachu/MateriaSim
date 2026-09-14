@@ -1,0 +1,100 @@
+{
+  "project_id": "zil_fragment_resp_v1",
+  "target": {
+    "smiles": "O=S(CCC[N+]1=CN(CCOCCOC)C=C1)([O-])=O",
+    "formal_charge_e": 0,
+    "multiplicity": 1,
+    "expected_atom_count_with_hydrogens": 39,
+    "heavy_atom_map_rule": "target RDKit zero-based heavy-atom index plus one"
+  },
+  "cut_bonds_target_zero_based": [
+    [3, 4],
+    [8, 9]
+  ],
+  "schemes": {
+    "methyl": {
+      "fragments": {
+        "sulfonate": {
+          "smiles": "[O:1]=[S:2]([CH2:3][CH2:4][CH3:901])([O-:18])=[O:19]",
+          "formal_charge_e": -1,
+          "retained_atom_maps": [1, 2, 3, 4, 18, 19],
+          "cap_groups_atom_maps": [[901]]
+        },
+        "imidazolium": {
+          "smiles": "[CH3:901][CH2:5][N+:6]1=[CH:7][N:8]([CH2:9][CH3:903])[CH:16]=[CH:17]1",
+          "formal_charge_e": 1,
+          "retained_atom_maps": [5, 6, 7, 8, 9, 16, 17],
+          "cap_groups_atom_maps": [[901], [903]]
+        },
+        "ether": {
+          "smiles": "[CH3:901][CH2:10][O:11][CH2:12][CH2:13][O:14][CH3:15]",
+          "formal_charge_e": 0,
+          "retained_atom_maps": [10, 11, 12, 13, 14, 15],
+          "cap_groups_atom_maps": [[901]]
+        }
+      }
+    },
+    "ethyl": {
+      "fragments": {
+        "sulfonate": {
+          "smiles": "[O:1]=[S:2]([CH2:3][CH2:4][CH2:901][CH3:902])([O-:18])=[O:19]",
+          "formal_charge_e": -1,
+          "retained_atom_maps": [1, 2, 3, 4, 18, 19],
+          "cap_groups_atom_maps": [[901, 902]]
+        },
+        "imidazolium": {
+          "smiles": "[CH3:902][CH2:901][CH2:5][N+:6]1=[CH:7][N:8]([CH2:9][CH2:903][CH3:904])[CH:16]=[CH:17]1",
+          "formal_charge_e": 1,
+          "retained_atom_maps": [5, 6, 7, 8, 9, 16, 17],
+          "cap_groups_atom_maps": [[901, 902], [903, 904]]
+        },
+        "ether": {
+          "smiles": "[CH3:902][CH2:901][CH2:10][O:11][CH2:12][CH2:13][O:14][CH3:15]",
+          "formal_charge_e": 0,
+          "retained_atom_maps": [10, 11, 12, 13, 14, 15],
+          "cap_groups_atom_maps": [[901, 902]]
+        }
+      }
+    }
+  },
+  "conformer_generation": {
+    "initial_pool": 200,
+    "selected_max": 6,
+    "rms_tolerance_A": 0.5,
+    "energy_window_kcal_mol": 30.0,
+    "minimize": "mmff94",
+    "keep_original": false,
+    "random_seed": 1
+  },
+  "orientations": {
+    "keep_original": true,
+    "generated_reorientations": 2
+  },
+  "qm": {
+    "method": "hf",
+    "basis": "6-31g*",
+    "geometry_convergence": "gau_tight",
+    "gas_phase": true
+  },
+  "resp": {
+    "stages": 2,
+    "stage_1_restraint_height": 0.0005,
+    "stage_2_restraint_height": 0.001,
+    "restraint_slope": 0.1,
+    "exclude_hydrogens_from_restraint": true,
+    "symmetric_atoms_are_equivalent": true,
+    "constrain_each_cap_group_charge_e": 0.0
+  },
+  "validation": {
+    "net_charge_tolerance_e": 0.0001,
+    "max_abs_atomic_charge_e": 2.0,
+    "cap_scheme_key_atom_difference_review_trigger_e": 0.1,
+    "cap_scheme_all_atom_rms_difference_review_trigger_e": 0.05,
+    "key_target_heavy_atom_indices_zero_based": [0, 1, 5, 6, 7, 10, 13, 17, 18],
+    "full_molecule_esp_and_dipole": "report_and_manual_review_before_topology"
+  },
+  "resources": {
+    "threads": 6,
+    "memory": "4GB"
+  }
+}

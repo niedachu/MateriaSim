@@ -1,0 +1,14 @@
+; Frozen noncovalent CAT/ANI ion pair in AMBER TIP3P water.
+#include "amber14sb.ff/forcefield.itp"
+#include "gaff2_atomtypes.itp"
+#include "cat.itp"
+#include "ani.itp"
+#include "amber14sb.ff/tip3p.itp"
+
+[ system ]
+One noncovalent CAT/ANI ion pair in excess water
+
+[ molecules ]
+CAT     1
+ANI     1
+SOL     2957

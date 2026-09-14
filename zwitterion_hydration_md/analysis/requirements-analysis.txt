@@ -1,0 +1,4 @@
+MDAnalysis>=2.7,<3
+numpy>=1.23,<3
+scipy>=1.10,<2
+

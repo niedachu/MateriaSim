@@ -1,0 +1,15 @@
+name: zil-amber-md
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - ambertools=24.8
+  - parmed=4.3.1
+  - openmm=8.6.0
+  - mdanalysis=2.9.0
+  - waterdynamics=1.2.0
+  - numpy
+  - scipy
+  - matplotlib
+  - pytest
+  - pip

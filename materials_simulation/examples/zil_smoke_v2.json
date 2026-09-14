@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "id": "zil_smoke_v2",
+  "purpose": "engineering_smoke",
+  "components": [
+    {
+      "id": "ZIL",
+      "model": "zil_model_v2.json",
+      "count": 1
+    }
+  ],
+  "interaction_bundle": "zil_bundle.json",
+  "scenario": {
+    "kind": "prebuilt_solute_water",
+    "box_nm": [
+      4.5,
+      4.5,
+      4.5
+    ]
+  },
+  "protocol": "zil_protocol.json",
+  "analysis_requests": [
+    {
+      "id": "contacts",
+      "kind": "hydration_contacts",
+      "stage_id": "prod",
+      "config": {
+        "water_oxygen_selection": "resname SOL and name OW",
+        "sites": {
+          "sulfonate": {
+            "selection": "resname ZIL and name O1 O4 O5",
+            "mode": "atoms",
+            "cutoff_nm": 0.35
+          },
+          "ether": {
+            "selection": "resname ZIL and name O2 O3",
+            "mode": "atoms",
+            "cutoff_nm": 0.35
+          },
+          "imidazolium": {
+            "selection": "resname ZIL and name N1 C4 N2 C10 C11",
+            "mode": "atoms",
+            "cutoff_nm": 0.35
+          }
+        }
+      }
+    }
+  ]
+}

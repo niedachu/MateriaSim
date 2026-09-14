@@ -1,0 +1,45 @@
+{
+  "status": "source_data_recorded_not_mapped_or_accepted",
+  "evidence_type": "published_supporting_information_table",
+  "article": {
+    "title": "Effect of Zwitterionic Molecules on Ionic Transport under Electric Fields: A Molecular Simulation Study",
+    "journal": "Journal of Chemical & Engineering Data",
+    "year": 2020,
+    "doi": "10.1021/acs.jced.9b00774",
+    "supporting_information_doi": "10.1021/acs.jced.9b00774.s001",
+    "source_section": "Table S1",
+    "source_url": "https://pubs.acs.org/doi/10.1021/acs.jced.9b00774?goto=supporting-info"
+  },
+  "source_description": "Force field parameters for the published Z2C/Z3C zwitterionic molecules, labeled as full charge in Table S1.",
+  "units": {
+    "sigma": "nm",
+    "epsilon": "kJ/mol",
+    "charge": "e"
+  },
+  "z2c_z3c_parameters": [
+    {"label": "C1", "multiplicity": 1, "sigma_nm": 0.35, "epsilon_kJ_mol": 0.276144, "charge_e": -0.24},
+    {"label": "H11,H12,H13", "multiplicity": 3, "sigma_nm": 0.25, "epsilon_kJ_mol": 0.12552, "charge_e": 0.08},
+    {"label": "C2", "multiplicity": 1, "sigma_nm": 0.35, "epsilon_kJ_mol": 0.276144, "charge_e": -0.17},
+    {"label": "H21,H22", "multiplicity": 2, "sigma_nm": 0.25, "epsilon_kJ_mol": 0.12552, "charge_e": 0.18},
+    {"label": "N1", "multiplicity": 1, "sigma_nm": 0.325, "epsilon_kJ_mol": 0.71128, "charge_e": 0.22},
+    {"label": "C3", "multiplicity": 1, "sigma_nm": 0.355, "epsilon_kJ_mol": 0.29288, "charge_e": -0.09},
+    {"label": "H3", "multiplicity": 1, "sigma_nm": 0.242, "epsilon_kJ_mol": 0.12552, "charge_e": 0.21},
+    {"label": "N2", "multiplicity": 1, "sigma_nm": 0.325, "epsilon_kJ_mol": 0.71128, "charge_e": 0.22},
+    {"label": "C5", "multiplicity": 1, "sigma_nm": 0.355, "epsilon_kJ_mol": 0.29288, "charge_e": -0.24},
+    {"label": "H5", "multiplicity": 1, "sigma_nm": 0.242, "epsilon_kJ_mol": 0.12552, "charge_e": 0.27},
+    {"label": "C6", "multiplicity": 1, "sigma_nm": 0.355, "epsilon_kJ_mol": 0.29288, "charge_e": -0.24},
+    {"label": "H6", "multiplicity": 1, "sigma_nm": 0.242, "epsilon_kJ_mol": 0.12552, "charge_e": 0.27},
+    {"label": "C7", "multiplicity": 1, "sigma_nm": 0.35, "epsilon_kJ_mol": 0.276144, "charge_e": -0.17},
+    {"label": "H71,H72", "multiplicity": 2, "sigma_nm": 0.25, "epsilon_kJ_mol": 0.12552, "charge_e": 0.18},
+    {"label": "C8", "multiplicity": 1, "sigma_nm": 0.35, "epsilon_kJ_mol": 0.276144, "charge_e": -0.24},
+    {"label": "H81,H82", "multiplicity": 2, "sigma_nm": 0.25, "epsilon_kJ_mol": 0.12552, "charge_e": 0.1},
+    {"label": "S", "multiplicity": 1, "sigma_nm": 0.355, "epsilon_kJ_mol": 1.046, "charge_e": 1.32},
+    {"label": "O1,O2,O3", "multiplicity": 3, "sigma_nm": 0.296, "epsilon_kJ_mol": 0.71128, "charge_e": -0.76}
+  ],
+  "computed_full_charge_sum_e": 0.0,
+  "target_use_boundary": {
+    "charge_values": "reference_and_possible_fixed-core_candidate_pending_explicit_atom-label_mapping_and_user_approval",
+    "lennard_jones_values": "not_eligible_for_direct_mixing_with_GAFF2",
+    "reason": "The target shares an imidazolium-propylsulfonate motif but has a different second N-substituent; the source force-field family was not established from the SI page alone."
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "分子模拟失败诊断"
+  short_description: "根据输入、阶段日志和轨迹证据定位模拟失败，不自动修改或重跑"
+  default_prompt: "使用 $simulation-diagnostics 检查指定模拟运行，区分已确认原因、推测和缺失证据。"

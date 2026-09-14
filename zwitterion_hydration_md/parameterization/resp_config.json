@@ -1,0 +1,40 @@
+{
+  "smiles": "O=S(CCC[N+]1=CN(CCOCCOC)C=C1)([O-])=O",
+  "molecular_charge_e": 0,
+  "multiplicity": 1,
+  "temperature_K": 298.15,
+  "conformer_generation": {
+    "initial_pool": 500,
+    "selected_max": 5,
+    "rms_tolerance_A": 0.5,
+    "energy_window_kcal_mol": 30.0,
+    "minimize": "mmff94",
+    "keep_original": false
+  },
+  "orientations": {
+    "keep_original": true,
+    "generated_reorientations": 2
+  },
+  "qm": {
+    "method": "hf",
+    "basis": "6-31g*",
+    "geometry_convergence": "gau_tight",
+    "gas_phase": true
+  },
+  "resp": {
+    "stages": 2,
+    "stage_1_restraint_height": 0.0005,
+    "stage_2_restraint_height": 0.001,
+    "restraint_slope": 0.1,
+    "exclude_hydrogens_from_restraint": true,
+    "symmetric_atoms_are_equivalent": true
+  },
+  "validation": {
+    "net_charge_tolerance_e": 0.0001,
+    "max_abs_atomic_charge_e": 2.0
+  },
+  "resources": {
+    "threads": 6,
+    "memory": "4GB"
+  }
+}

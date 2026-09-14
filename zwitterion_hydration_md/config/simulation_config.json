@@ -1,0 +1,54 @@
+{
+  "schema_version": 3,
+  "project_id": "zwitterion_single_molecule_hydration",
+  "solute": {
+    "residue_name": "ZIL",
+    "smiles": "O=S(CCC[N+]1=CN(CCOCCOC)C=C1)([O-])=O",
+    "formal_net_charge_e": 0,
+    "description": "3-(1-(2-(2-methoxyethoxy)ethyl)-1H-imidazol-3-ium-3-yl)propane-1-sulfonate",
+    "force_field": "GAFF2",
+    "charge_model": "AM1-BCC (AmberTools 24.8 antechamber)",
+    "parameterization_status": "accepted for the frozen single-replicate 4.5 nm formal protocol; see results/acceptance/ACCEPTED.json"
+  },
+  "solvent": {
+    "description": "pure water",
+    "model": "AMBER TIP3P",
+    "water_residue_name": "SOL",
+    "water_oxygen_atom_name": "OW",
+    "add_salt": false,
+    "add_counterions": false
+  },
+  "thermodynamic_state": {
+    "temperature_K": 298.0,
+    "pressure_bar": 1.0
+  },
+  "box": {
+    "shape": "cubic",
+    "edge_nm": 4.5,
+    "initial_water_molecules": 2957,
+    "finite_size_sensitivity_status": "user-selected fixed 4.5 nm production box; no box-size comparison is required for this protocol"
+  },
+  "production": {
+    "replicates": [
+      {"id": "run_001", "starting_conformer": "intermediate", "velocity_seed": 271828}
+    ],
+    "production_time_ns_per_replicate": 10.0,
+    "time_step_fs": 2.0,
+    "coordinate_output_ps": 2.0,
+    "checkpoint_interval_min": 10
+  },
+  "analysis": {
+    "cutoff_rule": "site-specific first stable minimum after the first RDF peak from production trajectories",
+    "total_count_rule": "union of unique water oxygen atom IDs selected by all site rules in each frame",
+    "site_cutoffs_nm": {
+      "sulfonate": null,
+      "ether": null,
+      "imidazolium": null
+    },
+    "site_atom_names": {
+      "sulfonate": [],
+      "ether": [],
+      "imidazolium_ring": []
+    }
+  }
+}

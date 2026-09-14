@@ -1,0 +1,4 @@
+interface:
+  display_name: "分子模拟研究"
+  short_description: "复用已有模型和案例，固定研究问题与对照并保留可追溯模拟证据"
+  default_prompt: "使用 $simulation-research 梳理本项目的模拟研究任务，先检查已有模型、案例和验收范围。"

@@ -1,0 +1,9 @@
+{
+  "molecule_types": {
+    "cat": "CAT",
+    "ani": "ANI"
+  },
+  "cross_ion_covalent_terms": 0,
+  "atomtype_count": 11,
+  "system_total_charge_e": 0.0
+}

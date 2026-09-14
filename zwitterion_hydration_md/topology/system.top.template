@@ -1,0 +1,14 @@
+; Copy this file to system.top only after replacing every placeholder with
+; a compatible, validated force-field include path.
+; The force field, water model, and ZIL parameters must use compatible
+; nonbonded combination and 1-4 scaling conventions.
+
+#include "<FORCE_FIELD_MASTER_INCLUDE>"
+#include "zil.itp"
+#include "<COMPATIBLE_WATER_MODEL_INCLUDE>"
+
+[ system ]
+Single ZIL molecule in excess water
+
+[ molecules ]
+ZIL     1

@@ -1,0 +1,19 @@
+name: zil-resp-qm
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - psi4=1.9.1
+  - psiresp-base=0.4.2
+  # Psi4 1.9.1 is ABI-incompatible with newer libint/LibXC releases even
+  # though their historical package metadata permits those versions.
+  - libint=2.9.0
+  - libxc-c=7.0.0=cpu_*
+  - rdkit
+  - qcengine=0.32
+  - qcelemental=0.29
+  - geometric
+  - numpy
+  - scipy
+  - pydantic=1.10
+  - pip

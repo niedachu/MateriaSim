@@ -1,0 +1,9 @@
+#include "amber14sb.ff/forcefield.itp"
+#include "gaff2_atomtypes.itp"
+#include "ani.itp"
+
+[ system ]
+Vacuum ANI single-point crosscheck
+
+[ molecules ]
+ANI  1
