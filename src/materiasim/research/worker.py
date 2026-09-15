@@ -6,6 +6,7 @@ from pathlib import Path
 
 from materiasim.storage import contained, read_json, run_lock
 from materiasim.research.plan import load_plan
+from materiasim.research.resources import task_limits
 
 
 def operation(batch, index, action):
@@ -15,7 +16,7 @@ def operation(batch, index, action):
     ledger = read_json(batch / "ledger.json")
     task = plan["tasks"][index]
     record = ledger["tasks"][index]
-    limits = plan["research"]["limits"]
+    limits = task_limits(plan["research"], read_json(batch / "plan/tasks" / task["id"] / "experiment.json"))
     root = contained(batch, "runs/" + record["run_id"])
     with run_lock(batch / "operation_guard"):
         if action == "build":

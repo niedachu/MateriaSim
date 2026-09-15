@@ -4,15 +4,7 @@ import csv
 from collections import Counter
 
 from materiasim.storage import sha256, utc_now
-from materiasim.specs.schema import fields, identifier, number
-
-
-def validate_contacts(config):
-    """Require two component IDs and a finite contact cutoff in nm; same-component contacts are allowed."""
-    fields(config, ("component_a", "component_b", "cutoff_nm"), "component contacts")
-    for key in ("component_a", "component_b"):
-        identifier(config[key], key)
-    number(config["cutoff_nm"], .01, 1.0, "cutoff_nm")
+from materiasim.specs.analysis import validate_contacts
 
 
 def molecule_pairs(positions_a, positions_b, ids_a, ids_b, dimensions, cutoff_nm):

@@ -13,19 +13,22 @@ from materiasim.research.compare import compare
 from materiasim.research.plan import external_output, plan
 
 
-def exercise(output):
+def exercise(output, research_source=None):
     """Interrupt the first real NVT worker, preserve its seal, then resume the same registered Run."""
     output = external_output(output)
     output.mkdir(parents=True, exist_ok=False)
-    source = Path(__file__).resolve().parents[2] / "studies/zil_count_smoke/research.json"
+    source = (Path(research_source).resolve() if research_source is not None else
+              Path(__file__).resolve().parents[2] / "studies/zil_count_smoke/research.json")
     definition = read_json(source)
     definition["id"] = "zil_batch_resume_acceptance"
     definition["question"] = "SIGTERM 后同一研究批次能否保留 NVT 检查点并在尝试上限内恢复？"
     definition["hypothesis"] = "首任务真实中断后恢复原 Run，第二任务正常完成，登记目标不变。"
-    definition["limits"]["max_tasks"] = 2
+    if research_source is None:
+        definition["limits"]["max_tasks"] = 2
     for case in definition["cases"]:
         case["experiment"] = str(source.parent / case["experiment"])
-        case["repeats"] = case["repeats"][:1]
+        if research_source is None:
+            case["repeats"] = case["repeats"][:1]
     write_json(output / "source/research.json", definition)
     plan(output / "source/research.json", output / "plan")
     batch = register(output / "plan", output / "batches", "gmx", "packmol")
@@ -43,11 +46,11 @@ def exercise(output):
                 raise AssertionError("No running NVT was observed; checkpoint coverage not established")
             time.sleep(.5)
             process.send_signal(signal.SIGTERM)
-            code = process.wait(timeout=30)
+            code = process.wait(timeout=60)
         finally:
             if process.poll() is None:
                 process.send_signal(signal.SIGTERM)
-                process.wait(timeout=30)
+                process.wait(timeout=60)
     interrupted = status(batch)
     seal = read_json(batch / "runs" / first / "stages/nvt/stage.json")
     write_json(output / "interruption.json", dict(returncode=code, status=interrupted, nvt_seal=seal))
@@ -72,8 +75,9 @@ def main():
     """Run only when an explicit new external output is provided; this command launches small MD."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--research-source", type=Path, help="Explicit bounded source; retain all its declared repeats")
     args = parser.parse_args()
-    print(exercise(args.output))
+    print(exercise(args.output, args.research_source))
 
 
 if __name__ == "__main__":

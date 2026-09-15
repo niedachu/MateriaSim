@@ -50,12 +50,18 @@ class ResearchTests(unittest.TestCase):
         self.assertEqual(len(result["tasks"]), 4)
         self.assertEqual(inventory(self.root, ["source"]), before)
         self.assertEqual(list(self.root.iterdir()), [self.source.parent])
-        self.assertEqual([t["spec"]["scenario"]["seed"] for t in result["tasks"]], [73129, 73130, 73131, 73132])
+        self.assertEqual([t["spec"]["scenario"]["builder"]["config"]["seed"] for t in result["tasks"]], [73129, 73130, 73131, 73132])
+        self.assertTrue(all(t["spec"]["schema_version"] == 3 for t in result["tasks"]))
         self.assertTrue(all(s["seed"] is None for t in result["tasks"] for s in t["spec"]["protocol"]["stages"] if s["velocities"] == "inherit"))
 
     def test_unknown_repeat_override_rejected(self):
         """Repeats may not change temperature or arbitrary experiment fields."""
         self.definition["cases"][0]["repeats"][0]["temperature"] = 500
+        self.reject()
+
+    def test_batch_resources_cannot_override_frozen_task_profile(self):
+        """A conflicting study thread choice fails before the batch builds a task."""
+        self.definition["limits"]["threads"] = 1
         self.reject()
 
     def test_seed_and_duplicate_guards(self):

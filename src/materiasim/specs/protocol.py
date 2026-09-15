@@ -1,7 +1,7 @@
 """Bounded linear stage identities and coordinate/velocity/checkpoint handoff."""
 
-def validate_stages(stages):
-    """Validate stage IDs, targets and inheritance without reading engine files; return None."""
+def validate_stages(stages, purpose="engineering_smoke"):
+    """Validate linear state handoff and purpose-specific finite targets; return None."""
     from materiasim.specs.schema import fields, identifier, integer, number
 
     if not isinstance(stages, list) or not 2 <= len(stages) <= 8:
@@ -20,7 +20,8 @@ def validate_stages(stages):
         minimize = stage["type"] == "minimization"
         if minimize != (previous is None):
             raise ValueError("Current protocol starts with one minimization, followed by dynamics")
-        integer(stage["steps"], 1, 5000 if minimize else 2000, "stage.steps")
+        limit = (5000 if minimize else 2000) if purpose == "engineering_smoke" else 2146483646
+        integer(stage["steps"], 1, limit, "stage.steps")
         integer(stage["step_origin"], 0, 1000000, "step_origin")
         number(stage["time_origin_ps"], 0, 1000000, "time_origin_ps")
         fields(stage["input"], ("stage_id", "kind"), "stage.input")

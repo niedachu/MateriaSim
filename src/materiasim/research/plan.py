@@ -1,13 +1,16 @@
 """Portable closed input snapshots; plan preview never creates Run evidence."""
 
-import shutil
-from copy import deepcopy
+from materiasim.runtime.capacity import copy_file, preflight, copy_budget
 from pathlib import Path
 
 from materiasim.storage import (contained, content_hash, inventory, read_json, sha256,
                                source_root, verify_hashes, write_json)
-from materiasim.specs.schema import fields, load_spec
-from materiasim.research.schema import definition_check, expand, projection
+from materiasim.specs.schema import fields
+from materiasim.workflows.validation import load_spec
+from materiasim.research.schema import definition_check, expand, projection, scenario_config
+from materiasim.workflows.migration import portable_document
+from materiasim.research.semantics import apply_repeat, seed_values, match_observables
+from copy import deepcopy
 
 
 def external_output(path, protected=()):
@@ -23,31 +26,22 @@ def external_output(path, protected=()):
 
 
 def snapshot_task(task, folder):
-    """Copy exact asset bytes and reconstruct ordinary v2 files for the existing loader."""
+    """Freeze portable v3 task bytes and retain original source documents plus the declared repeat derivation."""
     folder.mkdir(parents=True, exist_ok=False)
     assets = folder / "assets"
     assets.mkdir()
-    spec = deepcopy(task["spec"])
+    spec = portable_document(task["spec"], {name: "assets/" + name for name in task["sources"]})
     for name, source in task["sources"].items():
-        shutil.copyfile(source, assets / name)
+        copy_file(source, assets / name)
 
-    def restore_sources(document):
-        """Restore local paths stripped from scientific identity during resolution."""
-        for item in document.get("files", []):
-            item["source"] = "assets/" + item["name"]
-
-    for index, component in enumerate(spec["components"]):
-        model = component["model"]
-        restore_sources(model)
-        component["model"] = f"model-{index}.json"
-        write_json(folder / component["model"], model)
-    for key in ("interaction_bundle", "protocol"):
-        document = spec[key]
-        restore_sources(document)
-        spec[key] = key + ".json"
-        write_json(folder / spec[key], document)
-    if "structure" in spec["scenario"]:
-        restore_sources(spec["scenario"]["structure"])
+    origin = folder / "origin"
+    origin.mkdir()
+    for name, record in task["source_report"]["documents"].items():
+        copy_file(record["path"], origin / name)
+        if sha256(origin / name) != record["sha256"]:
+            raise ValueError("Source document changed while freezing task")
+    write_json(origin / "derivation.json", dict(source=task["source_report"], repeat=task["repeat"],
+                                               derived_spec_hash=task["spec_hash"]))
     write_json(folder / "experiment.json", spec)
     resolved, _, identity = load_spec(folder / "experiment.json")
     if identity != task["spec_hash"] or resolved != task["spec"]:
@@ -62,6 +56,10 @@ def plan(path, output=None):
     protected = [Path(path).resolve().parent]
     protected.extend(Path(p).parent for t in expanded["tasks"] for p in t["sources"].values())
     root = external_output(output, protected)
+    inputs = [p for task in expanded["tasks"] for p in task["sources"].values()]
+    inputs += [r["path"] for task in expanded["tasks"] for r in task["source_report"]["documents"].values()]
+    with copy_budget([root], expanded["research"]["limits"]["storage_bytes"], 64 * 1024 * 1024):
+        preflight(inputs, root)
     root.mkdir(parents=True, exist_ok=False)
     frozen_tasks = []
     for index, task in enumerate(expanded["tasks"]):
@@ -85,6 +83,8 @@ def load_plan(root):
     value = read_json(root / "plan.json")
     fields(value, ("schema_version", "research", "research_hash", "source_document", "tasks",
                    "storage_reservation_bytes", "scientific_quality", "hashes", "plan_hash"), "plan")
+    if type(value["schema_version"]) is not int or value["schema_version"] not in (1, 2, 3):
+        raise ValueError("Unsupported frozen plan version")
     payload = dict(value)
     identity = payload.pop("plan_hash")
     if content_hash(payload) != identity:
@@ -101,17 +101,41 @@ def load_plan(root):
     if len(expected) > value["research"]["limits"]["max_tasks"]:
         raise ValueError("Frozen tasks exceed budget")
     common = None
+    research_version = value["research"]["schema_version"]
+    seen_seeds, seen_cases = set(), set()
+    for case in value["research"]["cases"]:
+        if case["id"] in seen_cases or len({r["id"] for r in case["repeats"]}) != len(case["repeats"]):
+            raise ValueError("Duplicate frozen case/repeat")
+        seen_cases.add(case["id"])
+    if value["research"]["baseline_case"] not in seen_cases:
+        raise ValueError("Frozen baseline is missing")
     for index, task in enumerate(value["tasks"]):
         if task["id"] != f"task-{index:03d}":
             raise ValueError("Unexpected frozen task id")
         spec, _, identity = load_spec(contained(root, f"tasks/{task['id']}/experiment.json"))
+        if spec["purpose"] != value["research"]["purpose"]:
+            raise ValueError("Frozen research purpose differs from task purpose")
         if identity != task["spec_hash"]:
             raise ValueError("Frozen task specification changed")
-        stages = [s for s in spec["protocol"]["stages"] if s["velocities"] == "generate"]
-        if (spec["scenario"].get("seed") != task["repeat"]["packing_seed"] or len(stages) != 1
-                or stages[0]["seed"] != task["repeat"]["velocity_seed"]):
-            raise ValueError("Frozen repeat seeds differ from task definition")
-        projected = projection(spec, value["research"]["varied_factors"])
+        if value["schema_version"] >= 2 and spec["schema_version"] != 3:
+            raise ValueError("New frozen plans require v3 task contracts")
+        if research_version == 1:
+            stages = [s for s in spec["protocol"]["stages"] if s["velocities"] == "generate"]
+            if (scenario_config(spec).get("seed") != task["repeat"]["packing_seed"] or len(stages) != 1
+                    or stages[0]["seed"] != task["repeat"]["velocity_seed"]):
+                raise ValueError("Frozen repeat seeds differ from task definition")
+            seeds = (task["repeat"]["packing_seed"], task["repeat"]["velocity_seed"])
+        else:
+            repeated = deepcopy(spec)
+            apply_repeat(repeated, task["repeat"])
+            if repeated != spec:
+                raise ValueError("Frozen repeat differs from declared seeds")
+            match_observables(spec, value["research"]["observables"])
+            seeds = tuple(sorted(seed_values(spec).items()))
+        if seeds in seen_seeds:
+            raise ValueError("Duplicate frozen repeat seed assignment")
+        seen_seeds.add(seeds)
+        projected = projection(spec, value["research"]["varied_factors"], research_version)
         if common is not None and projected != common:
             raise ValueError("Undeclared frozen task difference")
         common = projected

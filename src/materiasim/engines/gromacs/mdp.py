@@ -28,7 +28,7 @@ def mdp_values(path):
 
 
 def stage_values(source, stage):
-    """Return effective MDP and recorded overrides for an explicitly typed stage."""
+    """Return effective parameters with fixed legacy smoke or explicit reviewed output intervals."""
     values = mdp_values(source)
     minimize = stage["type"] == "minimization"
     if values.get("integrator") != ("steep" if minimize else "md"):
@@ -36,13 +36,21 @@ def stage_values(source, stage):
     if not minimize and not 0 < float(values["dt"]) <= 0.002:
         raise ValueError("Engineering protocol requires dt <= 0.002 ps")
     changes = {"nsteps": str(stage["steps"])}
+    sampling = stage.get("sampling")
+    if sampling:
+        changes.update(nstlog=str(sampling["log_steps"]), nstenergy=str(sampling["energy_steps"]),
+                       **{"nstxout-compressed": str(sampling["trajectory_steps"])})
+        if any(int(values.get(k, "0")) != 0 for k in ("nstxout", "nstvout", "nstfout")):
+            raise ValueError("Reviewed output policy requires disabled full-precision coordinate/velocity/force streams")
     if not minimize:
         generate = stage["velocities"] == "generate"
         if values.get("gen-vel") != ("yes" if generate else "no"):
             raise ValueError("MDP gen-vel conflicts with explicit velocity handoff")
         if values.get("continuation") != ("no" if generate else "yes"):
             raise ValueError("MDP continuation conflicts with explicit state handoff")
-        changes.update(nstlog="100", nstenergy="100", **{"nstxout-compressed": "100"})
+        changes.update(nstlog=str(sampling["log_steps"]) if sampling else "100",
+                       nstenergy=str(sampling["energy_steps"]) if sampling else "100",
+                       **{"nstxout-compressed": str(sampling["trajectory_steps"]) if sampling else "100"})
         changes.update(tinit=str(stage["time_origin_ps"]), **{"init-step": str(stage["step_origin"])})
         if generate:
             changes["gen-seed"] = str(stage["seed"])
@@ -51,9 +59,10 @@ def stage_values(source, stage):
 
 
 def derive_mdp(source, destination, stage):
-    """Write engineering MDP from a stage descriptor, preserving the source bytes."""
+    """Write derived MDP, retaining original smoke bytes or labelling explicitly reviewed sampling."""
     values, changes = stage_values(source, stage)
-    Path(destination).write_text("; Engineering smoke only; source MDP retained in inputs.\n" +
+    header = "; Reviewed protocol; source MDP retained in inputs.\n" if "sampling" in stage else "; Engineering smoke only; source MDP retained in inputs.\n"
+    Path(destination).write_text(header +
                                 "\n".join(f"{key} = {value}" for key, value in values.items()) + "\n")
     return changes
 
@@ -62,8 +71,11 @@ def validate_protocol(stages, sources):
     """Validate the linear stage contract and bind every stage to a declared, compatible MDP."""
     from materiasim.specs.protocol import validate_stages
 
-    validate_stages(stages)
+    if stages and "mdp" in stages[0]:
+        validate_stages(stages)
+    from materiasim.engines.gromacs.specification import parameter_asset
     for stage in stages:
-        if stage["mdp"] not in sources:
+        name = parameter_asset(stage)
+        if name not in sources:
             raise ValueError("Stage MDP must be a declared protocol asset")
-        stage_values(sources[stage["mdp"]], stage)
+        stage_values(sources[name], stage)

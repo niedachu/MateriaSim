@@ -1,6 +1,7 @@
 """Serial registration and budget accounting; authoritative states remain in ordinary Runs."""
 
 import shutil
+from materiasim.runtime.capacity import copy_tree, copy_budget
 import uuid
 from pathlib import Path
 
@@ -16,6 +17,8 @@ def register(plan_root, output, gmx, packmol):
     """Reserve a deterministic batch directory and unique Run targets before any build."""
     plan_root = Path(plan_root).resolve()
     plan = load_plan(plan_root)
+    if plan["schema_version"] != 3:
+        raise ValueError("Historical frozen plans are read-only; create a new plan from research source")
     root = external_output(output, [plan_root])
     root.mkdir(parents=True, exist_ok=True)
     batch = root / plan["plan_hash"]
@@ -29,7 +32,8 @@ def register(plan_root, output, gmx, packmol):
         if shutil.disk_usage(root).free < plan["research"]["limits"]["storage_bytes"]:
             raise ValueError("Free disk below batch storage reservation")
         batch.mkdir()
-        shutil.copytree(plan_root, batch / "plan")
+        with copy_budget([batch], plan["research"]["limits"]["storage_bytes"], 64 * 1024 * 1024):
+            copy_tree(plan_root, batch / "plan")
         if load_plan(batch / "plan")["plan_hash"] != plan["plan_hash"]:
             raise ValueError("Plan changed during batch registration")
         (batch / "operation_guard").mkdir()
@@ -81,7 +85,8 @@ def status(batch):
     plan, ledger = validate_batch(batch)
     rows = []
     for task, record in zip(plan["tasks"], ledger["tasks"]):
-        folders = sorted((batch / "analyses" / task["id"]).glob("*/status.json"))
+        from materiasim.analysis.locations import generations
+        folders = [p / "status.json" for p in generations(batch / "analyses" / task["id"])]
         rows.append(dict(task_id=task["id"], case_id=task["case_id"], repeat=task["repeat"],
                          run_id=record["run_id"], status=task_state(batch, task, record),
                          analysis_states=[read_json(p)["status"] for p in folders]))
@@ -93,20 +98,24 @@ def status(batch):
 def perform(batch, plan, ledger, index, action):
     """Charge a maximum before launch, replacing it with measured cost only after a clean handoff."""
     limits = plan["research"]["limits"]
+    from materiasim.research.resources import task_limits
+    task_spec = read_json(batch / "plan/tasks" / plan["tasks"][index]["id"] / "experiment.json")
+    operation_limits = task_limits(plan["research"], task_spec)
     key = {"build": "build_seconds", "analyze": "analysis_seconds",
            "run": "execution_seconds", "resume": "execution_seconds"}[action]
-    available = limits["total_seconds"] - ledger["charged_seconds"] - GRACE_SECONDS
+    grace = GRACE_SECONDS if plan["research"]["schema_version"] == 1 else task_spec["execution_profile"]["termination_grace_seconds"] + 15
+    available = limits["total_seconds"] - ledger["charged_seconds"] - grace
     if available < 1 or storage_bytes(batch) >= limits["storage_bytes"]:
         ledger["exhausted"] = True
         write_json(batch / "ledger.json", ledger)
         raise ValueError("Batch wall/storage budget exhausted")
-    seconds = min(limits[key], available)
-    reserved = seconds + GRACE_SECONDS
+    seconds = min(operation_limits[key], available)
+    reserved = seconds + grace
     event_id = "event-" + uuid.uuid4().hex
     ledger["active"] = dict(index=index, action=action, event_id=event_id, reserved_seconds=reserved)
     ledger["charged_seconds"] += reserved
     write_json(batch / "ledger.json", ledger)
-    result = supervise(batch, index, action, seconds, limits["storage_bytes"], batch / "events" / event_id)
+    result = supervise(batch, index, action, seconds, limits["storage_bytes"], batch / "events" / event_id, grace=grace)
     result.update(index=index, event_id=event_id)
     ledger["events"].append(result)
     ledger["active"] = None
@@ -172,12 +181,18 @@ def advance_task(batch, plan, ledger, index, task, record, resume):
         # Include attempts made directly through the core, not just batch events.
         root = batch / "runs" / record["run_id"]
         actual = sum(p.name.startswith(("run-", "resume-")) for p in (root / "attempts").iterdir())
-        if max(attempts, actual) >= plan["research"]["limits"]["max_attempts"]:
+        from materiasim.research.resources import task_limits
+        spec = read_json(root / "resolved_spec.json")
+        if max(attempts, actual) >= task_limits(plan["research"], spec)["max_attempts"]:
             raise ValueError("Run attempt budget exhausted")
         perform(batch, plan, ledger, index, "resume" if state == "interrupted" else "run")
         state = task_state(batch, task, record)
     if state != "completed":
         raise ValueError(f"Batch stopped at {task['id']}: {state}; no automatic retry")
+    spec = read_json(batch / "runs" / record["run_id"] / "resolved_spec.json")
+    if not spec["analysis_requests"]:
+        task_reports(batch, task, record, required=True)
+        return
     reports = task_reports(batch, task, record)
     if not reports:
         if any(e["action"] == "analyze" for e in history):

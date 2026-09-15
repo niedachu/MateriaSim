@@ -9,8 +9,9 @@ from pathlib import Path
 from materiasim.workflows.analysis import analyze
 from materiasim.storage import read_json, sha256, verify_hashes, write_json
 from materiasim.runtime.records import stage_ids
-from materiasim.specs.schema import load_spec
+from materiasim.workflows.validation import load_spec
 from materiasim.runtime.state import source_identity, verify_run
+from materiasim.engines.gromacs.specification import native_view
 from tests.acceptance.verify_m1_evidence import file_identity
 
 
@@ -58,6 +59,7 @@ def reference_counts(analysis, output):
 def audit_run(root, output):
     """Verify completed source identity, group ownership and independent analysis without changing the Run."""
     spec, manifest = verify_run(root)
+    spec = native_view(spec)
     if manifest["implementation"] != source_identity() or read_json(root / "status.json")["status"] != "completed":
         raise AssertionError("Acceptance requires completed current-source Runs")
     before = file_identity(root)

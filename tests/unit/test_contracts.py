@@ -12,7 +12,7 @@ from materiasim.storage import content_hash, read_json, write_json
 from materiasim.engines.gromacs.stage import assess_stage
 from materiasim.engines.gromacs.mdp import mdp_values, stage_values, validate_protocol
 from materiasim.runtime.records import stage_ids
-from materiasim.specs.schema import load_spec
+from materiasim.workflows.validation import load_spec
 from materiasim.runtime.state import verify_execution, verify_run
 from tests.acceptance.verify_m1_evidence import compare_effective
 
@@ -153,10 +153,10 @@ class ContractTests(unittest.TestCase):
         self.assertFalse((self.root / ".writer.lock").exists())
 
     def test_changed_code_read_but_no_resume(self):
-        """v2 read integrity and permission to execute are independent checks."""
+        """Historical v2 stays readable but is not admitted to the single v3 executor."""
         self.history_fixture(version=2)
         verify_run(self.root)
-        with self.assertRaisesRegex(ValueError, "Implementation changed"):
+        with self.assertRaisesRegex(ValueError, "v2 is read-only"):
             verify_execution(self.root)
 
     def test_missing_completed_stage_rejected(self):

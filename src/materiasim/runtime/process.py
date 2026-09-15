@@ -7,6 +7,7 @@ import time
 from pathlib import Path
 
 from materiasim.storage import utc_now, write_json
+from materiasim.runtime.family import managed, kill, cleanup
 
 
 class CommandFailed(RuntimeError):
@@ -33,9 +34,10 @@ def run_command(engine, arguments, cwd, record, seconds=120, stdin=None, env=Non
     interrupted = []
     stop_deadline = []
     with (record / "stdout.log").open("w") as out, (record / "stderr.log").open("w") as err:
+        owner = not managed()
         process = subprocess.Popen(argv, cwd=cwd, env=env, stdout=out, stderr=err,
                                    stdin=subprocess.PIPE if stdin is not None else subprocess.DEVNULL,
-                                   text=True, start_new_session=True)
+                                   text=True, start_new_session=owner)
 
         def forward(signum, frame):
             """Forward cancellation only to this command's process group."""
@@ -43,7 +45,10 @@ def run_command(engine, arguments, cwd, record, seconds=120, stdin=None, env=Non
             if not stop_deadline:
                 stop_deadline.append(time.monotonic() + 10)
             if process.poll() is None:
-                os.killpg(process.pid, signal.SIGTERM)
+                if owner:
+                    os.killpg(process.pid, signal.SIGTERM)
+                else:
+                    process.send_signal(signal.SIGTERM)
 
         previous = {sig: signal.signal(sig, forward) for sig in (signal.SIGINT, signal.SIGTERM)}
         try:
@@ -58,10 +63,14 @@ def run_command(engine, arguments, cwd, record, seconds=120, stdin=None, env=Non
                     if time.monotonic() >= deadline and not stop_deadline:
                         forward(signal.SIGTERM, None)
                     if stop_deadline and time.monotonic() >= stop_deadline[0]:
-                        os.killpg(process.pid, signal.SIGKILL)
+                        kill(process, owner)
                         process.wait()
                         break
         finally:
+            if process.poll() is None:
+                kill(process, owner)
+                process.wait()
+            cleanup(process, owner)
             for sig, handler in previous.items():
                 signal.signal(sig, handler)
         metadata.update(returncode=process.returncode, interrupted=bool(interrupted),

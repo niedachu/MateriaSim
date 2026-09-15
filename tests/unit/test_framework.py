@@ -10,9 +10,11 @@ from pathlib import Path
 
 from materiasim.engines.gromacs.build import check_includes
 from materiasim.engines.gromacs.stage import assess_stage, check_numerics, execute_stage
+from materiasim.engines.contracts import PreparedStage
 from materiasim.storage import contained, read_json, run_lock, sha256, verify_hashes, write_json
 from materiasim.engines.gromacs.mdp import derive_mdp
-from materiasim.specs.schema import integer, load_spec, validate_analysis
+from materiasim.specs.schema import integer, validate_analysis
+from materiasim.workflows.validation import load_spec
 from materiasim.runtime.state import source_identity
 from materiasim.engines.gromacs.topology import atom_mapping
 
@@ -170,7 +172,8 @@ class FrameworkTests(unittest.TestCase):
         write_json(folder / "stage.json", {"status": "prepared"})
         (folder / "md.log").write_text("untracked output")
         with self.assertRaisesRegex(ValueError, "Untracked stage output"):
-            execute_stage(self.root, {"id": "nvt"}, {}, self.root / "attempt", 1, 2)
+            prepared = PreparedStage("gromacs", {"id": "nvt"}, {}, {}, {}, {}, {})
+            execute_stage(self.root, prepared, {}, self.root / "attempt", 1, 2)
 
     def test_unknown_spec_fields(self):
         """Undeclared scenario switches are not silently ignored."""

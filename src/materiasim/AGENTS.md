@@ -6,7 +6,7 @@
 
 - ZIL：读取[案例说明](../../zwitterion_hydration_md/README.md)、[现有 runner](../../zwitterion_hydration_md/scripts/run_production.py)和本次使用的配置/验收输入。
 - CAT/ANI：读取[案例说明](../../ion_pair_hydration_md/README.md)、[现有 runner](../../ion_pair_hydration_md/formal/run_production.py)及冻结初始坐标。文档与状态记录矛盾时交叉核查，不仅凭 README 判定完成。
-- 新框架先读 [README](../../README.md)、[CLI](cli.py) 与[M3 子集验收记录](../../docs/validation/2026-09-14__m3-packing-subset-acceptance.md)。现有命令为 `materiasim` 下的 doctor/capabilities/validate/build/run/resume/status/analyze/report 及 research validate/plan/run/status/compare；不要把[升级方案](../../docs/plans/2026-09-14__multicomponent-simulation__upgrade-plan.md)中的长期接口当成已实现命令。
+- 新框架先读 [README](../../README.md)、[CLI](cli.py) 与[M3 子集验收记录](../../docs/validation/2026-09-14__m3-packing-subset-acceptance.md)。现有命令为 `materiasim` 下的 doctor/capabilities/tools/validate/migrate/build/run/resume/status/analyze/report/archive/verify-archive 及 research validate/plan/run/status/compare；migrate 只预览，不写配置，doctor --devices 只读查设备，archive 写显式新目录，不删除来源。不要把[升级方案](../../docs/plans/2026-09-14__multicomponent-simulation__upgrade-plan.md)中的长期接口当成已实现命令。
 - 从仓库根使用对应平台解释器执行 `PYTHONPATH=src python -B -m unittest discover -s tests -v`；完整测试需要现有 MDAnalysis/NumPy 分析环境，核心测试可指定 `-p 'test_framework.py'`。不要为测试自行新增依赖。
 - 当前案例 runner 是正式协议入口，不等于短程测试工具。小量验收不得直接启动其完整协议；先找已存在的测试路径，缺少路径则说明需要实现受限测试。
 - 改变模拟实现不授权改动 ML 模型、原论文数据或其他课题。新增聚合物、颗粒、引擎和参数化环境须在具体任务范围内。
@@ -23,6 +23,10 @@
 ## Run、attempt 与证据
 
 - 新运行显式指定独立目录；不在源码或原始数据旁生成轨迹、检查点或缓存。文件位置与科学身份分开记录，不硬编码主机路径。
+- 新 profile v2 的 Run 同级 `.materiasim-operations/<RunID>/` 是身份绑定的全流程预算/操作证据，不是可清空缓存。保留 Run、控制账本与分析；不通过删账本、改 limits 或复制 Run 单目录绕过配额。未知交接拒绝继续，旧冻结计划版本 1/2 只读。
+- 新控制账本 contract v2 保存请求/结果哈希、顺序与结算关联；它与 execution_profile 的版本独立。旧控制账本 v1 只读，不补造哈希或原地升级，不追加受监督操作。账本损坏不手改余额、状态或清目录；完整性哈希不等于签名或正式用途审批。
+- GPU 请求、静态配置合法、设备可见、实际原生卸载与硬件验收分别记录。当前仅单 CUDA GPU 的非键/可选 PME 候选路径；不支持的设备/策略/日志不得静默回退 CPU。model_validation/production 必须使用 profile v3、显式采样和 purpose_policy 证据；本地审核声明不是认证签名。测试批准材料不得进入正式 catalog，也不得自动把 engineering_only 模型改成 reviewed。
+- 新 Run 的 storage_contract=1 要求每阶段独立封存代次清单，发现缺失/损坏拒绝恢复。复制前计量容量，分析按操作隔离；不删历史释放预算。archive/verify-archive 只实现完成态证据包的可搬迁只读核查，不授权活动 Run 改路径或跨平台续跑；未登记的旧外部分析不会自动被发现。
 - 记录解析后的输入、哈希、实际工具/环境、种子、命令、预期/实际阶段目标和输出。现有 runner 未具备某字段时说明缺口，不事后手改历史清单补成“已记录”。
 - 未完成且输入/协议未变的 Run 可按有效检查点恢复，记录新的 attempt；不得重写旧 attempt 或覆盖失败输出。现有 runner 的恢复支持范围必须以代码核查。
 - 已封存的完成、终止失败、取消或不确定 Run 不原地重开；恢复创建带父 Run/检查点身份的新 Run。改变体系或协议、延长原已完成目标也创建新 Run。可恢复的中断不等于已封存终止失败。

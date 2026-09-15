@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from materiasim.specs.schema import load_spec
+from materiasim.workflows.validation import load_spec
 from materiasim.storage import read_json, sha256, source_root
 from materiasim.workflows.build import build
 
@@ -35,7 +35,7 @@ class MigrationTests(unittest.TestCase):
     def test_build_protects_checkout(self):
         """A moved or editable-installed package still refuses generated Runs anywhere in its checkout."""
         self.assertEqual(source_root(), ROOT)
-        with patch("materiasim.workflows.build.engine_info", return_value={}):
+        with patch("materiasim.engines.gromacs.adapter.engine_info", return_value={}):
             with self.assertRaisesRegex(ValueError, "outside framework source"):
                 build(ROOT / "examples/packed_zil_water.json", ROOT / "studies/forbidden")
 

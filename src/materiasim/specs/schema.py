@@ -91,10 +91,16 @@ def load_model(path):
     return model, sources
 
 
-def load_spec(path):
-    """Read v1 for inspection, or resolve executable v2 with separate model/protocol."""
+def read_spec(path):
+    """Parse versioned assets; callers use workflows.validation.load_spec for applicability."""
     path = Path(path).resolve()
     spec = read_json(path)
+    if isinstance(spec, dict) and type(spec.get("schema_version")) is int and spec["schema_version"] == 3:
+        from materiasim.specs.v3 import resolve_spec
+        try:
+            return resolve_spec(path, spec)
+        except (KeyError, TypeError) as error:
+            raise ValueError("Malformed v3 specification: missing or invalid nested field") from error
     if isinstance(spec, dict) and type(spec.get("schema_version")) is int and spec["schema_version"] == 2:
         from materiasim.specs.experiment import resolve_spec
         return resolve_spec(path, spec)

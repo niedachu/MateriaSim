@@ -9,7 +9,7 @@ from materiasim.specs.experiment import interaction_bundle, resolve_components
 from materiasim.storage import read_json, write_json
 from materiasim.specs.composition import declared_counts
 from materiasim.engines.gromacs.prebuilt import molecular_definitions, validate_prebuilt_sources, verify_processed_models
-from materiasim.specs.schema import load_spec
+from materiasim.workflows.validation import load_spec
 
 EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 

@@ -1,34 +1,43 @@
 # 研究包使用指南
 
-研究源码按 `studies/<id>/README.md`、`research.json`、`experiments/` 组织。它描述问题、对照、明确条件与重复，调用同一个模拟核心，不复制构建器或 runner。首个例子是 [zil_count_smoke](../../studies/zil_count_smoke/research.json)。
+研究源码按 `studies/<id>/README.md`、`research.json`、`experiments/` 组织，调用同一个模拟核心，不复制构建器或 runner。通用 v2 示例是 [mixed_builders_smoke](../../studies/mixed_builders_smoke/README.md)；原 [zil_count_smoke](../../studies/zil_count_smoke/research.json) 保留为 v1 来源。
 
 ## 已实现范围
 
-- `schema_version=1`，仅 `engineering_smoke`；至少两个显式条件，最多 16 个展开任务，串行 CPU。
-- 当前重复展开接受 `packed_liquid`，且协议恰有一段生成初速度。预建结构仍可用普通单实验入口，不伪造其装填种子。
-- 每个 case 对应完整实验配置；repeat 只允许 `id`、`packing_seed`、`velocity_seed`。继承速度阶段的 seed 保持 null；拒绝重复种子对、重复 ID、非法字段和隐式随机种子。
-- 有意变化字段为 `component_counts`、`scenario`；模型/水模型、协议、阶段、选择、截断和其他未声明条件保持一致。首版不支持任意参数覆盖或跨力场、跨协议自动统计。
-- 研究比较器只汇总已配置的 `component_contacts`；普通核心仍支持独立水化分析。观察量为 `mean_unique_molecule_pairs`，单位 `molecule_pairs`，没有按分子对总数归一化。
+- 新研究定义 `schema_version=2`，至少两个显式条件、最多 16 个任务、串行执行；单任务资源使用普通实验中的 execution_profile v2/v3。研究 purpose 必须与每个任务一致；model_validation/production 的每个任务都需通过普通实验的用途门禁，不由研究判据代替审批。
+- 已有预建水盒、自动装填水盒/无水周期盒可进入同一研究编排，但必须通过原模型和场景适用性检查，不放宽科学输入约束。
+- 每个 case 引用完整实验，repeat 为 `id` 和 `seeds`。装填场景需要 `packing`；每个生成速度的阶段需要 `velocity_<阶段ID>`。预建场景没有 packing 槽，继承阶段没有速度种子槽；缺槽、额外槽、重复赋值、隐式随机值均拒绝。
+- 有意变化字段为 component_counts/scenario/protocol。声明变化只控制可比性检查，不会覆盖实验参数；模型、分析选择和未声明条件仍需一致。不同协议的结果还必须通过方法自身的阶段/时间窗检查，不自动合并。
+- 允许无分析（实验 analysis_requests=[]、研究 observables=[]），也允许同时配置原水化接触与组分接触。每项 observable 明确 request_id/method/metric/unit，并精确覆盖配置请求。
+
+| 方法 | 当前可比较指标 | 单位 |
+|---|---|---|
+| component_contacts | mean_unique_molecule_pairs | molecule_pairs |
+| hydration_contacts | mean_union_water_contacts | water_molecules |
+
+水化指标是原算法的水氧接触并集均值，不是热力学水化数。其他位点统计仍保留在各自报告；当前比较器不把两种方法混算。原 v1 研究定义保留 packed/单接触指标限制，新冻结时仍保留其原文与版本，不将 v1 文字判据伪造成科学批准。
 
 ## 预检和冻结
 
 以下命令使用已经安装本包的环境；从仓库根指定研究源码。预览不调用 Packmol/GROMACS，也不生成 Run。
 
 ```sh
-materiasim research validate studies/zil_count_smoke/research.json
-materiasim research plan studies/zil_count_smoke/research.json
+materiasim research validate studies/mixed_builders_smoke/research.json
+materiasim research plan studies/mixed_builders_smoke/research.json
 ```
 
 保存必须显式指定一个尚不存在的仓库外目录：
 
 ```sh
-materiasim research plan studies/zil_count_smoke/research.json --output /private/tmp/materiasim-study-plan
+materiasim research plan studies/mixed_builders_smoke/research.json --output /private/tmp/materiasim-study-plan
 materiasim research run /private/tmp/materiasim-study-plan --output-root /private/tmp/materiasim-study-batches
 ```
 
 路径只是示例，不能覆盖已有计划。当前输出校验拒绝符号链接组件；macOS 临时路径使用 `/private/tmp` 而不是 `/tmp`。Linux 使用自己的真实外部路径，不复制 Mac 环境。长期证据应另选稳定存储。
 
-plan 保存全部任务的普通 v2 配置、原始模型/MDP/坐标副本、实际种子、协议、分析请求、来源文档哈希与闭包清单。复制后再次解析并校验，执行不依赖原案例路径；安装态 GROMACS 力场库仍在 build 时按 bundle 身份核验并冻结。修改冻结文件会拒绝运行，不“修正哈希”继续。
+新冻结计划使用独立的 schema_version=3，可保存研究定义 v1 或 v2，任务仍为普通 v3 实验。它保存模型/MDP/坐标副本、种子、协议、分析请求、资源和闭包；每个任务 origin/ 保留原文及 derivation.json，区分迁移与重复派生。复制后再次解析校验，执行不依赖原案例路径；安装态力场库在 build 时按 bundle 身份核验并冻结。修改冻结文件拒绝运行，不“修正哈希”继续。
+
+旧版本 1/2 的冻结计划与批次保持只读，不改账本或用当前代码续跑。需要新执行时，从原研究源码创建新计划、新批次；历史实验/Run 的版本不因研究定义升级而改写。
 
 ## 批次、恢复与失败
 
@@ -47,14 +56,22 @@ materiasim research compare /实际路径/批次目录 --output-root /实际路�
 
 ## 资源限制
 
-研究文件必须声明线程、任务/尝试数、构建/执行/分析秒数、累计预算和存储阈值。ZIL 示例限定 4 任务、2 线程、每 Run 最多 2 次执行尝试、执行每次 180 秒、构建 600 秒、分析 120 秒、累计 1800 秒、1 GiB。
+Research v2 的 limits 仅声明 max_tasks/concurrency/total_seconds/storage_bytes，线程、设备、构建/执行/分析预算和 attempt 上限来自每个实验的冻结 execution_profile v2/v3，不再维护第二套线程/GPU 配置。批次仍上限 1800 秒、1 GiB，不因单实验 profile v3 可表达较长任务而提高批次总额；当前双场景示例限定 4 任务。大规模/长时研究调度未交付。
 
-整个子操作由外层监视，包括编译与分析；启动前先扣除授予预算和 20 秒退出宽限，交接成功后记实耗，崩溃后保守保留全额。所有启动共用累计预算，不因重新执行命令清零。核心子进程接到停止信号后最多再等 10 秒，然后杀掉其进程组。
+整个子操作由同一个单实验监督器控制，覆盖 build/run/resume/analyze 的进程启动、Python 工作、原生工具和退出。控制账本位于 runs/.materiasim-operations/<RunID>/，与 manifest 绑定，分析不修改 MD Run。批次另监视总预算；其退出宽限为任务宽限再加 15 秒，避免外层先杀掉正在保存检查点的内层。预扣后记录实耗，未知交接保留预扣额度并拒绝继续。
 
-存储预检保守预留 64 MiB/任务，启动前要求有总存储预算对应的可用空间；执行时约每 0.1 秒检查目录字节和剩余磁盘。1 GiB 是停止阈值，不是硬配额：单次写入、检查耗时及停机宽限可能越过阈值。需要强隔离的正式生产应使用服务器配额/调度器，本轮未实现。单实验 CLI 原墙钟参数语义不变；共用 CPU/GPU 资源格式留待 E 批。
+新任务的单 Run 控制账本使用独立 contract_version=2：绑定请求/结果哈希、顺序和前次结算，核对有限非负计费、状态及实际事件目录；分析输出登记由操作请求逐项核查，不能删掉条目释放预算。冻结计划版本 3、研究定义 v2 和 execution_profile v2 不因此再次升级。
+
+旧单 Run 控制账本 v1 只读，不原地补哈希或继续追加操作；已有 status/compare 证据可读取，新操作需匹配的源码快照或新的独立 Run。`archive` 可以导出某个完成态 Run、控制证据及登记分析，搬迁后用 `verify-archive` 核查；它不导出整个 Research 的计划、比较和批次账本，不支持批次活动路径迁移。完整研究备份仍须保留整批原始证据。任务退出后也检查资源阈值，退出码零不能覆盖超预算状态。
+
+存储预检保守预留 64 MiB/任务，启动前要求有总存储预算对应的可用空间；执行时约每 0.1 秒检查目录字节和剩余磁盘。1 GiB 是停止阈值，不是硬配额：单次写入、检查耗时及停机宽限可能越过阈值。需要强隔离的正式生产应使用服务器配额/调度器，本轮未实现。
+
+旧 Research v1 的显式操作上限和 20 秒外层宽限保留；默认 v2 实验迁移得到的 CPU profile v1 仍只有执行累计账本。新研究使用 profile v2 的全流程控制；不会悄悄把旧 Run 补成新契约。独立控制账本、Run、分析都需保留，复制 Run 单目录不能当成完整执行备份。GPU 候选逻辑和本机实际可用分开，未实测设备不会自动降级到 CPU。
 
 ## 比较与科学边界
 
 比较逐项校验计划、Run、AnalysisRun 请求、原轨迹/坐标/映射、CSV 和报告哈希，再检查阶段、实际帧数/时间窗、截断、单位、归一化与分析实现身份。所有声明的重复和失败均保留，任何缺失不自动补零或剔除。
+
+v2 decision_rules 包含 description 和有界 checks，支持 all_tasks_completed、analysis_valid、metric_range。范围规则必须引用已声明的 request_id/metric/unit 与明确 minimum/maximum；规则返回 pass/fail/not_assessed 及逐任务依据。它们仅是工程判据，不能授予 production 或 scientific pass。无分析的完整研究输出空 aggregates；分析失败、缺失或不可比的批次不整体聚合。
 
 只有完整可比集合才输出各条件的运行均值的均值；不生成置信区间或独立样本数。ZIL 数量增加可能改变填水数与可接触分子对总数，原始计数不能直接解释为结合更强。两次 8 ps 工程重复不证明平衡、有效采样或模型科学适用性。

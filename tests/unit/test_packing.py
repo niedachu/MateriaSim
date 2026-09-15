@@ -14,7 +14,7 @@ from materiasim.scenarios.packed import validate_packing
 from materiasim.analysis.component_contacts import molecule_pairs
 from materiasim.storage import read_json
 from materiasim.builders.packmol import check_periodic_clashes, ordered_instances, packmol_info, pdb_template, read_packed
-from materiasim.specs.schema import load_spec
+from materiasim.workflows.validation import load_spec
 from materiasim.engines.gromacs.topology import atom_mapping
 
 EXAMPLES = Path(__file__).resolve().parents[2] / "examples"

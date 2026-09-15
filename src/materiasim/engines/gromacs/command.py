@@ -9,6 +9,8 @@ from pathlib import Path
 
 from materiasim.storage import sha256
 from materiasim.runtime.process import run_command
+from materiasim.errors import MissingDependency
+from materiasim.engines.gromacs.device import build_capabilities
 
 
 def engine_info(candidate="gmx"):
@@ -17,7 +19,7 @@ def engine_info(candidate="gmx"):
         raise ValueError("Only native macOS/Linux are supported")
     executable = shutil.which(str(candidate))
     if executable is None:
-        raise FileNotFoundError(f"GROMACS executable not found: {candidate}")
+        raise MissingDependency(f"GROMACS executable not found: {candidate}")
     executable = str(Path(executable).resolve())
     result = subprocess.run([executable, "--version"], capture_output=True, text=True, check=True, timeout=15)
     output = result.stdout + result.stderr
@@ -26,7 +28,8 @@ def engine_info(candidate="gmx"):
     if not version or not prefix:
         raise ValueError("Unrecognized GROMACS version output")
     return {"executable": executable, "sha256": sha256(executable), "version": version.group(1).strip(),
-            "data_prefix": str(Path(prefix.group(1).strip()).resolve()), "platform": sys.platform}
+            "data_prefix": str(Path(prefix.group(1).strip()).resolve()), "platform": sys.platform,
+            "build_capabilities": build_capabilities(output)}
 
 
 def environment(inputs):
@@ -34,10 +37,10 @@ def environment(inputs):
     return dict(os.environ, GMXLIB=str(Path(inputs).resolve()), GMX_MAXBACKUP="-1")
 
 
-def command(engine, arguments, cwd, record, inputs, seconds=120, stdin=None):
+def command(engine, arguments, cwd, record, inputs, seconds=120, stdin=None, overrides=None):
     """Run GROMACS with frozen input lookup; return the shared process execution record."""
     return run_command(engine, arguments, cwd, record, seconds=seconds, stdin=stdin,
-                       env=environment(inputs))
+                       env=dict(environment(inputs), **(overrides or {})))
 
 
 def checkpoint(engine, path):

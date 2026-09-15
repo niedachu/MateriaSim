@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 from materiasim.storage import write_json
 from materiasim.engines.gromacs.stage import execute_stage
+from materiasim.engines.contracts import PreparedStage
 from materiasim.runtime.process import CommandFailed
 
 
@@ -24,6 +25,15 @@ class SignalRecoveryTests(unittest.TestCase):
         self.record = self.attempt / "run-nvt"
         self.record.mkdir(parents=True)
         (self.record / "stderr.log").write_text("Received the TERM signal, stopping within 200 steps\n")
+        # These tests isolate exit interpretation; full contract validation has its own fixtures
+        # and real-tool acceptance. No native compiler is represented by these stderr fixtures.
+        check = patch("materiasim.engines.gromacs.stage.verify_native_prepared")
+        check.start()
+        self.addCleanup(check.stop)
+
+    def prepared(self, stage):
+        """Wrap the native-exit fixture in the new stage boundary without inventing compiled evidence."""
+        return PreparedStage("gromacs", stage, {}, {}, {}, {}, {})
 
     def test_only_observed_native_signal_exit_is_admitted(self):
         """A marker alone, a different exit code, or minimization cannot become recoverable."""
@@ -33,7 +43,7 @@ class SignalRecoveryTests(unittest.TestCase):
                 with patch("materiasim.engines.gromacs.stage.command", side_effect=error), \
                         patch("materiasim.engines.gromacs.stage.assess_stage") as assess:
                     with self.assertRaises(CommandFailed):
-                        execute_stage(self.root, dict(self.stage, type=kind), {}, self.attempt, 2, 10)
+                        execute_stage(self.root, self.prepared(dict(self.stage, type=kind)), {}, self.attempt, 2, 10)
                     assess.assert_not_called()
 
     def test_signal_exit_still_requires_valid_checkpoint_and_numerics(self):
@@ -43,7 +53,7 @@ class SignalRecoveryTests(unittest.TestCase):
                 patch("materiasim.engines.gromacs.stage.assess_stage", side_effect=ValueError("bad checkpoint")), \
                 patch("materiasim.engines.gromacs.stage.preserve_stage") as preserve:
             with self.assertRaisesRegex(ValueError, "bad checkpoint"):
-                execute_stage(self.root, self.stage, {}, self.attempt, 2, 10)
+                execute_stage(self.root, self.prepared(self.stage), {}, self.attempt, 2, 10)
             preserve.assert_not_called()
 
     def test_exit_one_without_native_signal_message_still_fails(self):
@@ -52,4 +62,4 @@ class SignalRecoveryTests(unittest.TestCase):
         error = CommandFailed("failed", dict(returncode=1, interrupted=True))
         with patch("materiasim.engines.gromacs.stage.command", side_effect=error):
             with self.assertRaises(CommandFailed):
-                execute_stage(self.root, self.stage, {}, self.attempt, 2, 10)
+                execute_stage(self.root, self.prepared(self.stage), {}, self.attempt, 2, 10)

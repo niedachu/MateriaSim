@@ -9,13 +9,14 @@ from pathlib import Path
 
 from materiasim.storage import sha256, write_json
 from materiasim.runtime.process import run_command
+from materiasim.errors import MissingDependency
 
 
 def packmol_info(candidate="packmol"):
     """Read the no-input banner and require native PBC plus the seekable -i interface; never pack on query."""
     executable = shutil.which(str(candidate))
     if executable is None:
-        raise FileNotFoundError("Packmol not found; install it explicitly or provide --packmol")
+        raise MissingDependency("Packmol not found; install it explicitly or provide --packmol")
     executable = str(Path(executable).resolve())
     # Packmol has no --version option; empty stdin prints the banner then reports no input.
     result = subprocess.run([executable], input="", capture_output=True, text=True, timeout=10)

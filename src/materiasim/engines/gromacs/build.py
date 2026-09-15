@@ -1,13 +1,14 @@
 """GROMACS prebuilt-solute water-box construction and frozen-library handling."""
 
 import re
-import shutil
+from materiasim.runtime.capacity import copy_file, copy_tree, preflight
 from pathlib import Path
 
 from materiasim.storage import content_hash, inventory, sha256, write_json
 from materiasim.engines.gromacs.command import command
-from materiasim.engines.gromacs.stage import compile_stage
+from materiasim.engines.gromacs.compile import compile_stage
 from materiasim.engines.gromacs.mdp import derive_mdp
+from materiasim.engines.gromacs.specification import parameter_asset
 from materiasim.specs.composition import declared_counts
 from materiasim.engines.gromacs.prebuilt import structure_assets, validate_prebuilt_sources, verify_processed_models
 from materiasim.engines.gromacs.topology import atom_mapping, gro_atoms, molecule_counts
@@ -42,25 +43,28 @@ def library_identity(library, force_field):
 
 
 def snapshot(root, spec, sources, engine):
-    """Freeze all component models, structure, protocol and the exact interaction library."""
+    """Admit total input/library bytes, then freeze checked independent scientific copies."""
     bundle = spec["interaction_bundle"]
     inputs = root / "inputs"
-    inputs.mkdir()
-    for name, source in sources.items():
-        shutil.copyfile(source, inputs / name)
     library = Path(engine["data_prefix"]) / "share/gromacs/top"
     force_field = bundle["force_field"]
     if library_identity(library, force_field) != bundle["library_hash"]:
         raise ValueError("Installed interaction library differs from the declared bundle")
-    shutil.copytree(library / force_field, inputs / force_field)
+    preflight([*sources.values(), library / force_field, *(library / n for n in LIBRARY_FILES)], inputs)
+    inputs.mkdir()
+    for name, source in sources.items():
+        copy_file(source, inputs / name)
+    copy_tree(library / force_field, inputs / force_field)
     for name in LIBRARY_FILES:
         if name in sources:
             raise ValueError(f"Asset collides with engine library: {name}")
-        shutil.copyfile(library / name, inputs / name)
+        copy_file(library / name, inputs / name)
     if library_identity(inputs, force_field) != bundle["library_hash"]:
         raise ValueError("Interaction library changed during snapshot")
     assets = [asset for component in spec["components"] for asset in component["model"]["files"]]
     assets.extend(spec["protocol"]["files"])
+    if "purpose_policy" in spec:
+        assets.extend(spec["purpose_policy"]["files"])
     if spec["scenario"]["kind"] == "prebuilt_mixture_water":
         assets.extend(spec["scenario"]["structure"]["files"])
     if "files" in bundle:
@@ -84,22 +88,19 @@ def snapshot(root, spec, sources, engine):
         raise ValueError("Prebuilt topology composition differs from the experiment; assembly is not implemented")
     if spec["scenario"]["kind"] == "prebuilt_mixture_water":
         validate_prebuilt_sources(spec, {name: inputs / name for name in sources})
-    shutil.copyfile(topology, built / "system.top")
+    copy_file(topology, built / "system.top")
     derive_protocol(spec, inputs, built)
 
 
 def derive_protocol(spec, inputs, built):
     """Derive and record the same explicit bounded protocol for prebuilt and packed scenarios."""
-    changes = {stage["id"]: derive_mdp(inputs / stage["mdp"], built / f"{stage['id']}.mdp", stage)
+    changes = {stage["id"]: derive_mdp(inputs / parameter_asset(stage), built / f"{stage['id']}.mdp", stage)
                for stage in spec["protocol"]["stages"]}
     write_json(built / "protocol_overrides.json", changes)
 
 
 def prepare_system(root, spec, sources, engine, attempt, packmol_candidate="packmol"):
-    """Prepare the declared fixed/packed scenario and return its validated atom mapping."""
-    if spec["scenario"]["kind"] == "packed_liquid":
-        from materiasim.engines.gromacs.packed import prepare_packed
-        return prepare_packed(root, spec, sources, engine, attempt, packmol_candidate)
+    """Prepare a registered prebuilt solute/mixture pipeline and return its validated atom mapping."""
     snapshot(root, spec, sources, engine)
     inputs, built = root / "inputs", root / "build"
     box_nm = spec["scenario"]["box_nm"]
@@ -107,7 +108,7 @@ def prepare_system(root, spec, sources, engine, attempt, packmol_candidate="pack
     mixture = spec["scenario"]["kind"] == "prebuilt_mixture_water"
     if mixture:
         # The accepted dry mixture already defines its placement and box; do not recenter it.
-        shutil.copyfile(coordinates, built / "boxed.gro")
+        copy_file(coordinates, built / "boxed.gro")
     else:
         command(engine, ["editconf", "-f", coordinates, "-o", built / "boxed.gro", "-c", "-box", *box_nm],
                 inputs, attempt / "editconf", inputs)

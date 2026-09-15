@@ -18,7 +18,7 @@ from materiasim.storage import read_json
 from materiasim.engines.gromacs.command import command
 from materiasim.specs.protocol import validate_stages
 from materiasim.runtime.process import CommandFailed, run_command
-from materiasim.specs.schema import load_spec
+from materiasim.workflows.validation import load_spec
 from materiasim.runtime.state import source_identity
 from materiasim.engines.gromacs.topology import gro_atoms
 

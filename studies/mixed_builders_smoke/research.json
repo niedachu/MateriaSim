@@ -1,0 +1,95 @@
+{
+  "schema_version": 2,
+  "id": "mixed_builders_smoke",
+  "revision": 1,
+  "question": "同一 CAT/ANI 模型能否经预建与自动装填场景、双分析和统一资源控制完成四个声明任务？",
+  "hypothesis": "四任务均保留准确组成、完成阶段及双分析；工程通过不代表平衡或结合能力。",
+  "purpose": "engineering_smoke",
+  "baseline_case": "prebuilt",
+  "varied_factors": [
+    "scenario",
+    "component_counts"
+  ],
+  "controlled_factors": [
+    "相同 CAT/ANI 模型与相互作用包",
+    "相同原始 MDP、温压、步长、短程目标和分析选择"
+  ],
+  "observables": [
+    {
+      "request_id": "pair_contacts",
+      "method": "hydration_contacts",
+      "metric": "mean_union_water_contacts",
+      "unit": "water_molecules"
+    },
+    {
+      "request_id": "component_pairs",
+      "method": "component_contacts",
+      "metric": "mean_unique_molecule_pairs",
+      "unit": "molecule_pairs"
+    }
+  ],
+  "decision_rules": {
+    "description": "只判断任务到齐、阶段和分析证据完整，不判断科学收敛。",
+    "checks": [
+      {
+        "id": "complete",
+        "kind": "all_tasks_completed"
+      },
+      {
+        "id": "analysis",
+        "kind": "analysis_valid"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "id": "prebuilt",
+      "experiment": "experiments/prebuilt.json",
+      "repeats": [
+        {
+          "id": "r1",
+          "seeds": {
+            "velocity_nvt": 10011
+          }
+        },
+        {
+          "id": "r2",
+          "seeds": {
+            "velocity_nvt": 10021
+          }
+        }
+      ]
+    },
+    {
+      "id": "packed",
+      "experiment": "experiments/packed.json",
+      "repeats": [
+        {
+          "id": "r1",
+          "seeds": {
+            "packing": 10111,
+            "velocity_nvt": 10112
+          }
+        },
+        {
+          "id": "r2",
+          "seeds": {
+            "packing": 10121,
+            "velocity_nvt": 10122
+          }
+        }
+      ]
+    }
+  ],
+  "limits": {
+    "max_tasks": 4,
+    "concurrency": 1,
+    "total_seconds": 1800,
+    "storage_bytes": 1073741824
+  },
+  "sources": [
+    "examples/cat_ani_smoke.json",
+    "examples/packed_ions_water.json",
+    "既有参数与协议仅重新组织；原输入未改写。"
+  ]
+}

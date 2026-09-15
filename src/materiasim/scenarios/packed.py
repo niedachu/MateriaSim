@@ -3,6 +3,7 @@
 from materiasim.builders.regions import validate_regions
 from materiasim.engines.gromacs.parameters import collect_models
 from materiasim.engines.gromacs.mdp import mdp_values
+from materiasim.engines.gromacs.specification import parameter_asset
 from materiasim.specs.schema import fields, integer, number
 from materiasim.specs.composition import declared_counts
 
@@ -23,7 +24,7 @@ def validate_packing(spec, sources):
     collect_models(spec, sources)
     if scenario["solvent"]["kind"] == "none":
         for stage in spec["protocol"]["stages"]:
-            values = mdp_values(sources[stage["mdp"]])
+            values = mdp_values(sources[parameter_asset(stage)])
             if stage["type"] == "dynamics" and values.get("pcoupl") != "no":
                 raise ValueError("Dry periodic engineering regression requires fixed volume, pcoupl=no")
         if any(request["kind"] == "hydration_contacts" for request in spec["analysis_requests"]):

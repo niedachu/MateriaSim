@@ -4,8 +4,9 @@ from pathlib import Path
 
 from materiasim.storage import content_hash, read_json, sha256
 from materiasim.specs.schema import fields, identifier, integer, number
-from materiasim.engines.gromacs.mdp import validate_protocol
+from materiasim.specs.protocol import validate_stages
 from materiasim.specs.analysis import analysis_requests
+from materiasim.errors import MateriaSimError
 
 
 def reference(parent, value, label):
@@ -67,7 +68,7 @@ def interaction_bundle(path, components, sources):
     identifier(bundle["id"], "bundle.id")
     identifier(bundle["force_field"], "force_field")
     if bundle["engine"] != "gromacs" or not bundle["force_field"].endswith(".ff"):
-        raise ValueError("Only a native GROMACS .ff bundle is implemented")
+        raise MateriaSimError("UNSUPPORTED_COMBINATION", "Only a native GROMACS .ff bundle is implemented", field="interaction_bundle")
     if bundle["water_model"] != "tip3p" or bundle["validation_scope"] != "engineering_only":
         raise ValueError("Only the existing engineering TIP3P bundle is implemented")
     for key in ("library_hash",):
@@ -116,7 +117,7 @@ def resolve_scenario(scenario, parent, sources):
     elif scenario["kind"] == "packed_liquid":
         fields(scenario, ("kind", "box_nm", "seed", "tolerance_nm", "max_iterations", "solvent", "groups"), "packing")
     else:
-        raise ValueError("Scenario not implemented")
+        raise MateriaSimError("UNSUPPORTED_COMBINATION", "Scenario not implemented", field="scenario.kind")
     if not isinstance(scenario["box_nm"], list) or len(scenario["box_nm"]) != 3:
         raise ValueError("box_nm requires three orthorhombic lengths")
     for length in scenario["box_nm"]:
@@ -143,14 +144,8 @@ def resolve_spec(path, spec):
     fields(protocol, ("id", "files", "stages"), "protocol")
     identifier(protocol["id"], "protocol.id")
     protocol = dict(protocol, files=assets(protocol["files"], protocol_path.parent, sources))
-    validate_protocol(protocol["stages"], {item["name"]: sources[item["name"]] for item in protocol["files"]})
+    validate_stages(protocol["stages"])
     requests = analysis_requests(spec["analysis_requests"], protocol["stages"])
     resolved = dict(spec, components=components, interaction_bundle=bundle, scenario=scenario,
                     protocol=protocol, analysis_requests=requests)
-    if scenario["kind"] == "prebuilt_mixture_water":
-        from materiasim.engines.gromacs.prebuilt import validate_prebuilt_sources
-        validate_prebuilt_sources(resolved, sources)
-    elif scenario["kind"] == "packed_liquid":
-        from materiasim.scenarios.packed import validate_packing
-        validate_packing(resolved, sources)
     return resolved, sources, content_hash(resolved)

@@ -7,8 +7,19 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from materiasim.runtime.family import launch, kill, cleanup
 
 GRACE_SECONDS = 20
+
+
+def task_limits(research, spec):
+    """Use frozen task resources; legacy research retains its explicit stricter operation ceilings."""
+    if research["schema_version"] == 1:
+        return research["limits"]
+    profile = spec["execution_profile"]
+    return dict(threads=profile["threads"], execution_seconds=profile["max_wall_seconds"],
+                max_attempts=profile["max_attempts"], build_seconds=profile["build_seconds"],
+                analysis_seconds=profile["analysis_seconds"])
 
 
 def storage_bytes(root):
@@ -26,7 +37,7 @@ def storage_bytes(root):
     return total
 
 
-def supervise(batch, index, action, seconds, storage_limit, event_dir):
+def supervise(batch, index, action, seconds, storage_limit, event_dir, grace=GRACE_SECONDS):
     """Bound a complete worker operation; return wall/exit evidence including exit grace."""
     event_dir.mkdir(parents=True, exist_ok=False)
     started = time.monotonic()
@@ -38,12 +49,12 @@ def supervise(batch, index, action, seconds, storage_limit, event_dir):
         cancelled.append(signum)
 
     previous = {sig: signal.signal(sig, stop) for sig in (signal.SIGINT, signal.SIGTERM)}
-    process = None
+    process, owner = None, False
     try:
         with (event_dir / "stdout.log").open("w") as out, (event_dir / "stderr.log").open("w") as err:
-            process = subprocess.Popen([sys.executable, "-B", "-m", "materiasim.research.worker",
+            process, owner = launch([sys.executable, "-B", "-m", "materiasim.research.worker",
                                         str(batch), str(index), action], stdout=out, stderr=err,
-                                       stdin=subprocess.DEVNULL, start_new_session=True)
+                                       stdin=subprocess.DEVNULL)
             while process.poll() is None:
                 if cancelled:
                     reason = "cancelled"
@@ -58,19 +69,21 @@ def supervise(batch, index, action, seconds, storage_limit, event_dir):
                     break
                 time.sleep(.1)
             try:
-                process.wait(timeout=GRACE_SECONDS)
+                process.wait(timeout=grace)
             except subprocess.TimeoutExpired:
-                os.killpg(process.pid, signal.SIGKILL)
+                kill(process, owner)
                 process.wait()
                 reason = "worker_did_not_stop"
     finally:
         if process is not None and process.poll() is None:
             process.send_signal(signal.SIGTERM)
             try:
-                process.wait(timeout=GRACE_SECONDS)
+                process.wait(timeout=grace)
             except subprocess.TimeoutExpired:
-                os.killpg(process.pid, signal.SIGKILL)
+                kill(process, owner)
                 process.wait()
+        if process is not None:
+            cleanup(process, owner)
         for sig, handler in previous.items():
             signal.signal(sig, handler)
     return dict(action=action, returncode=process.returncode, stop_reason=reason,

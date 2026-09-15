@@ -1,0 +1,376 @@
+{
+  "schema_version": 3,
+  "id": "packed_ions_water",
+  "purpose": "engineering_smoke",
+  "components": [
+    {
+      "id": "CAT",
+      "model": {
+        "id": "cat_gaff2_am1bcc",
+        "component_id": "CAT",
+        "coordinates": "cat.gro",
+        "topology": "cat.itp",
+        "files": [
+          {
+            "name": "cat.gro",
+            "sha256": "e108e97b4270715fc3805592bef0b44c67ee71fc547023732c5a7bcde9820cda",
+            "format": "gro",
+            "source": "../../../catalog/models/cat/cat.gro"
+          },
+          {
+            "name": "cat.itp",
+            "sha256": "dd4571f3f2098dced5da1bd2bdaabdfe265c8b623e79f336b95fba05e3c0ae3d",
+            "format": "gromacs_itp",
+            "source": "../../../catalog/models/cat/cat.itp"
+          }
+        ],
+        "resolution": "unspecified",
+        "provenance": {
+          "status": "not_provided",
+          "references": []
+        }
+      },
+      "count": 2,
+      "role": "unspecified"
+    },
+    {
+      "id": "ANI",
+      "model": {
+        "id": "ani_gaff2_am1bcc",
+        "component_id": "ANI",
+        "coordinates": "ani.gro",
+        "topology": "ani.itp",
+        "files": [
+          {
+            "name": "ani.gro",
+            "sha256": "5f26044967ca55f30e3b3912ef8df8d589f0a3b47c62c2a1136ffaf66b1c352d",
+            "format": "gro",
+            "source": "../../../catalog/models/ani/ani.gro"
+          },
+          {
+            "name": "ani.itp",
+            "sha256": "bda34347254862e2476aa75bfad7d0ab394aaeab56bcfdb1c5fbcd376a04416d",
+            "format": "gromacs_itp",
+            "source": "../../../catalog/models/ani/ani.itp"
+          }
+        ],
+        "resolution": "unspecified",
+        "provenance": {
+          "status": "not_provided",
+          "references": []
+        }
+      },
+      "count": 2,
+      "role": "unspecified"
+    }
+  ],
+  "interaction_bundle": {
+    "id": "cat_ani_tip3p_bundle",
+    "engine": "gromacs",
+    "validation_scope": "engineering_only",
+    "model_hashes": {
+      "CAT": "81977278d7d7d39a5d2ec6b1f532221ca06b0ea6e899ead020d6c2b7b3f95856",
+      "ANI": "bf08b631b895ae6e121f6bfc3d990becd9b583198460f39c950938a6cfb5d2f6"
+    },
+    "files": [
+      {
+        "name": "gaff2_atomtypes.itp",
+        "sha256": "728655aa76aeeb6c463ac62d8462686f6162a7166803c14aafdb21607129f593",
+        "format": "gromacs_itp",
+        "source": "../../../catalog/interaction_bundles/assets/gaff2_atomtypes.itp"
+      }
+    ],
+    "engine_parameters": {
+      "force_field": "amber14sb.ff",
+      "library_hash": "c073cc4a461823a4cfdf0413b6a20f5b631c0122c5575c543fcf04fd0ab48503",
+      "water_model": "tip3p"
+    }
+  },
+  "protocol": {
+    "id": "cat_ani_engineering_protocol",
+    "files": [
+      {
+        "name": "em.mdp",
+        "sha256": "340a02e211d7f3ab446b9827d2e7bc942f72065aa19ec7ddd4e8b1352119bfa2",
+        "format": "gromacs_mdp",
+        "source": "../../../catalog/protocols/ions/em.mdp"
+      },
+      {
+        "name": "nvt.mdp",
+        "sha256": "880574d96438d49731df6b7caebfc2c1b602e40648735725c2d383c627d5fc1e",
+        "format": "gromacs_mdp",
+        "source": "../../../catalog/protocols/ions/nvt.mdp"
+      },
+      {
+        "name": "npt.mdp",
+        "sha256": "103100b07b60c6eead8be17a3c208bd05383f530fa7fbce2be78c0a1f9d6ef75",
+        "format": "gromacs_mdp",
+        "source": "../../../catalog/protocols/ions/npt.mdp"
+      },
+      {
+        "name": "prod.mdp",
+        "sha256": "ae1e840fb8772ab834b7617d7661ce27514f6f90333ea10361f215893244d191",
+        "format": "gromacs_mdp",
+        "source": "../../../catalog/protocols/ions/prod.mdp"
+      }
+    ],
+    "stages": [
+      {
+        "id": "em",
+        "type": "minimization",
+        "steps": 5000,
+        "input": {
+          "stage_id": null,
+          "kind": "coordinates"
+        },
+        "velocities": "none",
+        "seed": null,
+        "time_origin_ps": 0,
+        "step_origin": 0,
+        "engine_parameters": {
+          "engine": "gromacs",
+          "asset": "em.mdp"
+        },
+        "physics": {
+          "timestep_ps": null,
+          "temperature_k": [],
+          "pressure_bar": [],
+          "force_tolerance_kj_mol_nm": 500.0
+        },
+        "outputs": [
+          "coordinates",
+          "log"
+        ]
+      },
+      {
+        "id": "nvt",
+        "type": "dynamics",
+        "steps": 1000,
+        "input": {
+          "stage_id": "em",
+          "kind": "coordinates"
+        },
+        "velocities": "generate",
+        "seed": 192837,
+        "time_origin_ps": 0,
+        "step_origin": 0,
+        "engine_parameters": {
+          "engine": "gromacs",
+          "asset": "nvt.mdp"
+        },
+        "physics": {
+          "timestep_ps": 0.002,
+          "temperature_k": [
+            298.0
+          ],
+          "pressure_bar": [],
+          "force_tolerance_kj_mol_nm": null
+        },
+        "outputs": [
+          "coordinates",
+          "log",
+          "trajectory",
+          "energy",
+          "checkpoint"
+        ]
+      },
+      {
+        "id": "npt",
+        "type": "dynamics",
+        "steps": 1000,
+        "input": {
+          "stage_id": "nvt",
+          "kind": "checkpoint"
+        },
+        "velocities": "inherit",
+        "seed": null,
+        "time_origin_ps": 0,
+        "step_origin": 0,
+        "engine_parameters": {
+          "engine": "gromacs",
+          "asset": "npt.mdp"
+        },
+        "physics": {
+          "timestep_ps": 0.002,
+          "temperature_k": [
+            298.0
+          ],
+          "pressure_bar": [
+            1.0
+          ],
+          "force_tolerance_kj_mol_nm": null
+        },
+        "outputs": [
+          "coordinates",
+          "log",
+          "trajectory",
+          "energy",
+          "checkpoint"
+        ]
+      },
+      {
+        "id": "prod",
+        "type": "dynamics",
+        "steps": 2000,
+        "input": {
+          "stage_id": "npt",
+          "kind": "checkpoint"
+        },
+        "velocities": "inherit",
+        "seed": null,
+        "time_origin_ps": 0,
+        "step_origin": 0,
+        "engine_parameters": {
+          "engine": "gromacs",
+          "asset": "prod.mdp"
+        },
+        "physics": {
+          "timestep_ps": 0.002,
+          "temperature_k": [
+            298.0
+          ],
+          "pressure_bar": [
+            1.0
+          ],
+          "force_tolerance_kj_mol_nm": null
+        },
+        "outputs": [
+          "coordinates",
+          "log",
+          "trajectory",
+          "energy",
+          "checkpoint"
+        ]
+      }
+    ]
+  },
+  "analysis_requests": [
+    {
+      "id": "pair_contacts",
+      "kind": "hydration_contacts",
+      "stage_id": "prod",
+      "config": {
+        "water_oxygen_selection": "resname SOL and name OW",
+        "sites": {
+          "anion_sulfonate": {
+            "selection": "resname ANI and name O1 O2 O3",
+            "mode": "atoms",
+            "cutoff_nm": 0.33
+          },
+          "cation_ether": {
+            "selection": "resname CAT and name O1 O2",
+            "mode": "atoms",
+            "cutoff_nm": 0.34
+          },
+          "cation_imidazolium_CH": {
+            "selection": "resname CAT and name H6 H18 H19",
+            "mode": "atoms",
+            "cutoff_nm": 0.36
+          }
+        }
+      }
+    },
+    {
+      "id": "component_pairs",
+      "kind": "component_contacts",
+      "stage_id": "prod",
+      "config": {
+        "component_a": "CAT",
+        "component_b": "ANI",
+        "cutoff_nm": 0.5
+      }
+    }
+  ],
+  "scenario": {
+    "kind": "packed_liquid",
+    "boundary": {
+      "vectors_nm": [
+        [
+          4.5,
+          0,
+          0
+        ],
+        [
+          0,
+          4.5,
+          0
+        ],
+        [
+          0,
+          0,
+          4.5
+        ]
+      ],
+      "periodic": [
+        true,
+        true,
+        true
+      ]
+    },
+    "builder": {
+      "id": "gromacs_packmol",
+      "config": {
+        "seed": 73129,
+        "tolerance_nm": 0.25,
+        "max_iterations": 100,
+        "solvent": {
+          "kind": "tip3p_fill"
+        },
+        "groups": [
+          {
+            "id": "cat_bulk",
+            "component_id": "CAT",
+            "count": 2,
+            "min_nm": [
+              0,
+              0,
+              0
+            ],
+            "max_nm": [
+              4.5,
+              4.5,
+              4.5
+            ]
+          },
+          {
+            "id": "ani_bulk",
+            "component_id": "ANI",
+            "count": 2,
+            "min_nm": [
+              0,
+              0,
+              0
+            ],
+            "max_nm": [
+              4.5,
+              4.5,
+              4.5
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "execution_profile": {
+    "contract_version": 2,
+    "device": "cpu",
+    "threads": 2,
+    "max_wall_seconds": 180,
+    "total_wall_seconds": 360,
+    "max_attempts": 2,
+    "checkpoint_interval_minutes": 0.01,
+    "build_seconds": 600,
+    "analysis_seconds": 120,
+    "workflow_seconds": 1200,
+    "termination_grace_seconds": 25,
+    "storage_bytes": 536870912,
+    "min_free_bytes": 67108864,
+    "gpu_id": null,
+    "dynamics_offload": {
+      "nb": "cpu",
+      "pme": "cpu",
+      "bonded": "cpu",
+      "update": "cpu"
+    }
+  }
+}

@@ -1,12 +1,12 @@
 """Packmol-to-GROMACS integration; no duplicate simulation or checkpoint runner."""
 
-import shutil
+from materiasim.runtime.capacity import copy_file
 
 from materiasim.engines.gromacs.parameters import collect_models
 from materiasim.engines.gromacs.coordinates import write_gro
 from materiasim.storage import content_hash, sha256, write_json
 from materiasim.engines.gromacs.command import command
-from materiasim.engines.gromacs.stage import compile_stage
+from materiasim.engines.gromacs.compile import compile_stage
 from materiasim.builders.packmol import pack
 from materiasim.engines.gromacs.prebuilt import verify_processed_models
 from materiasim.specs.composition import declared_counts
@@ -30,7 +30,7 @@ def prepare_packed(root, spec, sources, engine, attempt, candidate):
                 inputs, attempt / "solvate", inputs, seconds=60)
     else:
         # The retained stage adapter consumes this filename; its name does not imply water.
-        shutil.copyfile(built / "boxed.gro", built / "solvated.gro")
+        copy_file(built / "boxed.gro", built / "solvated.gro")
     first = spec["protocol"]["stages"][0]
     compile_stage(root, first, engine, attempt)
     processed = root / "stages" / first["id"] / "processed.top"

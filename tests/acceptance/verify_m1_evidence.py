@@ -7,7 +7,7 @@ from pathlib import Path
 from materiasim.workflows.analysis import analyze
 from materiasim.storage import read_json, sha256, verify_hashes, write_json
 from materiasim.runtime.records import stage_ids
-from materiasim.specs.schema import load_spec
+from materiasim.workflows.validation import load_spec
 from materiasim.runtime.state import source_identity, verify_run
 
 
