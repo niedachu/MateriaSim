@@ -32,6 +32,8 @@ materiasim validate examples/packed_mixture_water.json
 PYTHONPATH=src python -B -m unittest discover -s tests -v
 ```
 
+完整 MD 流程、GROMACS／开源工具／本项目的职责及不同材料场景的配置路线，见[MD 工作流程与工具边界指南](docs/guides/md-workflow-and-tool-boundaries.md)；其中候选接入项不代表已实现能力。
+
 单实验入口见[模拟指南](docs/guides/simulation.md)，多个条件与重复见[研究包指南](docs/guides/research.md)。首个可运行研究包是 [ZIL 数量工程验收](studies/zil_count_smoke/README.md)：
 
 ```sh
