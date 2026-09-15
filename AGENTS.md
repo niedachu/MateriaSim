@@ -2,9 +2,9 @@
 
 ## Project Purpose
 
-项目名称为 **MateriaSim**，根目录为 `/Users/niezhidong/Desktop/MateriaSim`（原名 `Machine Learning`）。子目录与 Python 包名保持不变；历史报告中的旧绝对路径保留为来源记录，不据此重新创建旧目录。
+项目名称为 **MateriaSim**，根目录为 `/Users/niezhidong/Desktop/MateriaSim`（原名 `Machine Learning`）。当前唯一核心为 `src/materiasim/`，命令为 `materiasim`；历史报告中的旧包名与绝对路径保留为来源记录，不据此重新创建旧目录。
 
-本工作区维护材料分子模拟平台及现有 ZIL/离子对水化案例。`materials_simulation/` 已有共用工程核心，并支持 ZIL/CAT/ANI 按整数数量自动装配、加水或无水周期盒短测、快照、GROMACS 运行/续跑及独立水化/组分接触分析；Mac CPU 当前子集已实测，Linux 待验收。混合溶剂、聚合物、固相与纳米材料尚未支持，M3 仅完成已有模型子集。实际入口与限制以该模块 README 为准，不得把升级方案中的其他材料覆盖视为已实现能力。
+本工作区维护材料分子模拟平台及现有 ZIL/离子对水化案例。`src/materiasim/` 是共用工程核心，支持 ZIL/CAT/ANI 按整数数量自动装配、加水或无水周期盒短测、快照、GROMACS 运行/续跑及独立水化/组分接触分析；研究层支持显式条件与种子、冻结计划、串行批次和受限接触比较。Mac CPU 当前子集已实测，Linux 待验收。混合溶剂、聚合物、固相与纳米材料尚未支持，M3 仅完成已有模型子集。实际入口与限制以根 README 和 docs/guides 为准，不得把方案中的其他材料覆盖视为已实现能力。
 
 Scientific traceability and reproducibility take priority over runtime and code brevity. Every conclusion must clearly distinguish among facts reported in the paper, local reproduction results, model predictions, and research hypotheses.
 
@@ -18,7 +18,7 @@ Scientific traceability and reproducibility take priority over runtime and code 
 ## 任务路由与局部规则
 
 - 根规则管理公共工程、授权和数据边界；局部规则细化所属模块，不自行放宽数据保护或科学验收要求。
-- 新模拟平台开发：读取 [materials_simulation/AGENTS.md](materials_simulation/AGENTS.md)。现有 `zwitterion_hydration_md/` 和 `ion_pair_hydration_md/` 的 MD 任务也须读取此公共模拟规则，再读取所属案例 README 和相关代码；不据此自动迁移旧目录。
+- 新模拟平台开发：读取 [src/materiasim/AGENTS.md](src/materiasim/AGENTS.md)。现有 `zwitterion_hydration_md/` 和 `ion_pair_hydration_md/` 的 MD 任务也须读取此公共模拟规则，再读取所属案例 README 和相关代码；不据此自动迁移旧目录。
 - 历史方案保留当时的工作区布局与证据，不按其中的旧目录引用重新创建、恢复或下载已清理的独立项目。新增非模拟课题需另行明确范围。
 
 ### 项目内技能
@@ -43,9 +43,11 @@ Scientific traceability and reproducibility take priority over runtime and code 
 
 ## Project Layout
 
-- `materials_simulation/`：共用模拟核心、测试、示例与工程验收记录。
-- `zwitterion_hydration_md/`：ZIL 案例、当前示例依赖的模型/协议及 `.venv-macos-analysis/` 分析环境；不是可整目录删除的旧副本。
-- `ion_pair_hydration_md/`：CAT/ANI 案例与当前示例依赖的坐标、拓扑和参数。
+- `src/materiasim/`：唯一模拟核心、研究编排和命令入口；`tests/` 保存测试与验收工具。
+- `catalog/`、`examples/`、`studies/`：共享模型/协议资产、最小实验、研究源码包；研究层不复制 runner。
+- `materials_simulation/`：保留的历史示例与迁移指引；验收记录现归 `docs/validation/`。
+- `zwitterion_hydration_md/`：ZIL 历史案例、原始模型/协议及 `.venv-macos-analysis/` 分析环境；不是可整目录删除的旧副本。
+- `ion_pair_hydration_md/`：CAT/ANI 历史案例、坐标、拓扑和参数来源；新示例通过 catalog 副本解析。
 - `docs/`、`skills/`：方案、审查约束与项目内操作指南。
 - 根目录旧 `confout.gro`、其编号备份、`mdout.mdp`、`state.cpt`、`state_prev.cpt`、`timer.dat`：保留的历史输出，不是当前新 Run 输入；未经单独授权不删除或覆盖。
 - `tmp/`：仅按需使用的中间文件位置；目录名不证明内容可重建，清理前检查实际文件，不能把其中资料默认当作有备份。

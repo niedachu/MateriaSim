@@ -1,0 +1,45 @@
+{
+  "id": "dry_fixed_volume_smoke",
+  "files": [
+    {
+      "name": "em.mdp",
+      "source": "dry/dry_em.mdp",
+      "sha256": "435b9dc34c84376519bd308f9832b3e38e9f094d07ca6a14cd374b22a7ea6622"
+    },
+    {
+      "name": "nvt.mdp",
+      "source": "zil/nvt.mdp",
+      "sha256": "880574d96438d49731df6b7caebfc2c1b602e40648735725c2d383c627d5fc1e"
+    }
+  ],
+  "stages": [
+    {
+      "id": "em",
+      "type": "minimization",
+      "mdp": "em.mdp",
+      "steps": 5000,
+      "input": {
+        "stage_id": null,
+        "kind": "coordinates"
+      },
+      "velocities": "none",
+      "seed": null,
+      "time_origin_ps": 0,
+      "step_origin": 0
+    },
+    {
+      "id": "nvt",
+      "type": "dynamics",
+      "mdp": "nvt.mdp",
+      "steps": 1000,
+      "input": {
+        "stage_id": "em",
+        "kind": "coordinates"
+      },
+      "velocities": "generate",
+      "seed": 271828,
+      "time_origin_ps": 0,
+      "step_origin": 0
+    }
+  ]
+}

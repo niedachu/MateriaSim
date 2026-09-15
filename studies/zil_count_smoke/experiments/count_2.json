@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "id": "zil_count_2",
+  "purpose": "engineering_smoke",
+  "components": [
+    {
+      "id": "ZIL",
+      "model": "../../../catalog/models/zil_molecule.json",
+      "count": 2
+    }
+  ],
+  "interaction_bundle": "../../../catalog/interaction_bundles/packed_zil_bundle.json",
+  "protocol": "../../../catalog/protocols/zil_protocol.json",
+  "analysis_requests": [
+    {
+      "id": "component_pairs",
+      "kind": "component_contacts",
+      "stage_id": "prod",
+      "config": {
+        "component_a": "ZIL",
+        "component_b": "ZIL",
+        "cutoff_nm": 0.5
+      }
+    }
+  ],
+  "scenario": {
+    "kind": "packed_liquid",
+    "box_nm": [
+      4.5,
+      4.5,
+      4.5
+    ],
+    "seed": 73129,
+    "tolerance_nm": 0.25,
+    "max_iterations": 100,
+    "solvent": {
+      "kind": "tip3p_fill"
+    },
+    "groups": [
+      {
+        "id": "left",
+        "component_id": "ZIL",
+        "count": 1,
+        "min_nm": [
+          0,
+          0,
+          0
+        ],
+        "max_nm": [
+          2.2,
+          4.5,
+          4.5
+        ]
+      },
+      {
+        "id": "right",
+        "component_id": "ZIL",
+        "count": 1,
+        "min_nm": [
+          2.3,
+          0,
+          0
+        ],
+        "max_nm": [
+          4.5,
+          4.5,
+          4.5
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "zil_gaff2_am1bcc_molecule",
+  "component_id": "ZIL",
+  "coordinates": "zil_intermediate.gro",
+  "topology": "zil.itp",
+  "files": [
+    {
+      "name": "zil.itp",
+      "source": "zil/zil.itp",
+      "sha256": "11661b7ad9673d96db7f2be8161e1dad40dadba85b31334bc5f29c87b231eb7d"
+    },
+    {
+      "name": "zil_intermediate.gro",
+      "source": "zil/zil_intermediate.gro",
+      "sha256": "1806d4a68ed3e0ec9dc19d26be25fbd009940eb2d5321de15a10becfaf5283e4"
+    }
+  ]
+}

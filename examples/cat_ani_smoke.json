@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "id": "cat_ani_smoke",
+  "purpose": "engineering_smoke",
+  "components": [
+    {
+      "id": "CAT",
+      "model": "../catalog/models/cat_model.json",
+      "count": 1
+    },
+    {
+      "id": "ANI",
+      "model": "../catalog/models/ani_model.json",
+      "count": 1
+    }
+  ],
+  "interaction_bundle": "../catalog/interaction_bundles/cat_ani_bundle.json",
+  "scenario": {
+    "kind": "prebuilt_mixture_water",
+    "box_nm": [
+      4.5,
+      4.5,
+      4.5
+    ],
+    "solvent_count": 2957,
+    "structure": {
+      "coordinates": "pair_initial.gro",
+      "topology": "pair_system.top",
+      "files": [
+        {
+          "name": "pair_initial.gro",
+          "source": "../catalog/models/ion_pair/pair_initial.gro",
+          "sha256": "4721b7eb75f8177944018af633bca657b4e6de88fdaa025a897a2c341f1cc8c4"
+        },
+        {
+          "name": "pair_system.top",
+          "source": "../catalog/models/ion_pair/system.top",
+          "sha256": "ee20793fd8c876d486dcf9020b83d234e4fb072c7a0de451f9e1763347d82ae8"
+        }
+      ]
+    }
+  },
+  "protocol": "../catalog/protocols/cat_ani_protocol.json",
+  "analysis_requests": [
+    {
+      "id": "pair_contacts",
+      "kind": "hydration_contacts",
+      "stage_id": "prod",
+      "config": {
+        "water_oxygen_selection": "resname SOL and name OW",
+        "sites": {
+          "anion_sulfonate": {
+            "selection": "resname ANI and name O1 O2 O3",
+            "mode": "atoms",
+            "cutoff_nm": 0.33
+          },
+          "cation_ether": {
+            "selection": "resname CAT and name O1 O2",
+            "mode": "atoms",
+            "cutoff_nm": 0.34
+          },
+          "cation_imidazolium_CH": {
+            "selection": "resname CAT and name H6 H18 H19",
+            "mode": "atoms",
+            "cutoff_nm": 0.36
+          }
+        }
+      }
+    }
+  ]
+}

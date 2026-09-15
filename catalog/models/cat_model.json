@@ -1,0 +1,18 @@
+{
+  "id": "cat_gaff2_am1bcc",
+  "component_id": "CAT",
+  "coordinates": "cat.gro",
+  "topology": "cat.itp",
+  "files": [
+    {
+      "name": "cat.gro",
+      "source": "cat/cat.gro",
+      "sha256": "e108e97b4270715fc3805592bef0b44c67ee71fc547023732c5a7bcde9820cda"
+    },
+    {
+      "name": "cat.itp",
+      "source": "cat/cat.itp",
+      "sha256": "dd4571f3f2098dced5da1bd2bdaabdfe265c8b623e79f336b95fba05e3c0ae3d"
+    }
+  ]
+}

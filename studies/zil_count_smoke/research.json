@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "id": "zil_count_smoke",
+  "revision": 1,
+  "question": "两个 ZIL 数量条件、每条件两次显式种子重复，能否完整、可追溯地经过同一模拟核心？",
+  "hypothesis": "四个任务均按声明数量构建、完成受限协议并给出可追溯的组分接触工程汇总。",
+  "purpose": "engineering_smoke",
+  "baseline_case": "count_2",
+  "varied_factors": [
+    "component_counts"
+  ],
+  "controlled_factors": [
+    "ZIL 模型与 GAFF2/AM1-BCC、TIP3P 参数包",
+    "4.5 nm 周期盒、装填区域几何和同一短程协议",
+    "prod 阶段全时窗、0.5 nm 分子对接触阈值"
+  ],
+  "observables": [
+    {
+      "metric": "mean_unique_molecule_pairs",
+      "unit": "molecule_pairs"
+    }
+  ],
+  "decision_rules": "四个任务均有完整身份、准确 ZIL 数量、完成阶段和有效分析才算工程通过。任一失败停止后续任务并报告全部条目。短重复不判定平衡，不比较结合能力，不推断置信区间。填水数量可能随 ZIL 数量而变。",
+  "cases": [
+    {
+      "id": "count_2",
+      "experiment": "experiments/count_2.json",
+      "repeats": [
+        {
+          "id": "r1",
+          "packing_seed": 73129,
+          "velocity_seed": 271828
+        },
+        {
+          "id": "r2",
+          "packing_seed": 73130,
+          "velocity_seed": 271829
+        }
+      ]
+    },
+    {
+      "id": "count_4",
+      "experiment": "experiments/count_4.json",
+      "repeats": [
+        {
+          "id": "r1",
+          "packing_seed": 73131,
+          "velocity_seed": 271830
+        },
+        {
+          "id": "r2",
+          "packing_seed": 73132,
+          "velocity_seed": 271831
+        }
+      ]
+    }
+  ],
+  "limits": {
+    "max_tasks": 4,
+    "concurrency": 1,
+    "threads": 2,
+    "max_attempts": 2,
+    "execution_seconds": 180,
+    "build_seconds": 600,
+    "analysis_seconds": 120,
+    "total_seconds": 1800,
+    "storage_bytes": 1073741824
+  },
+  "sources": [
+    "由 examples/packed_zil_water.json 派生；原案例与参数文件保留，不做重参数化。",
+    "catalog/models/zil_molecule.json 与 packed_zil_bundle.json 的精确模型/文件身份；迁移来源见 docs/architecture/migration_map.json。",
+    "docs/plans/2026-09-15__architecture__simulation-package-and-research-bundles__implementation-plan.md 第 9 节工程设计；不是文献科学结论。"
+  ]
+}

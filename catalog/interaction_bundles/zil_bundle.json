@@ -1,0 +1,9 @@
+{
+  "id": "zil_tip3p_engineering_bundle",
+  "engine": "gromacs",
+  "model_hash": "958b66e217bf43c4b3fad8833648e326f9672aff441e91ee90812a01055a01eb",
+  "force_field": "amber14sb.ff",
+  "library_hash": "c073cc4a461823a4cfdf0413b6a20f5b631c0122c5575c543fcf04fd0ab48503",
+  "water_model": "tip3p",
+  "validation_scope": "engineering_only"
+}

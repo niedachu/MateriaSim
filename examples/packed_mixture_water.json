@@ -1,0 +1,97 @@
+{
+  "schema_version": 2,
+  "id": "packed_mixture_water",
+  "purpose": "engineering_smoke",
+  "components": [
+    {
+      "id": "ZIL",
+      "model": "../catalog/models/zil_molecule.json",
+      "count": 1
+    },
+    {
+      "id": "CAT",
+      "model": "../catalog/models/cat_model.json",
+      "count": 1
+    },
+    {
+      "id": "ANI",
+      "model": "../catalog/models/ani_model.json",
+      "count": 1
+    }
+  ],
+  "interaction_bundle": "../catalog/interaction_bundles/packed_mixture_bundle.json",
+  "protocol": "../catalog/protocols/zil_protocol.json",
+  "analysis_requests": [
+    {
+      "id": "component_pairs",
+      "kind": "component_contacts",
+      "stage_id": "prod",
+      "config": {
+        "component_a": "CAT",
+        "component_b": "ANI",
+        "cutoff_nm": 0.5
+      }
+    }
+  ],
+  "scenario": {
+    "kind": "packed_liquid",
+    "box_nm": [
+      4.5,
+      4.5,
+      4.5
+    ],
+    "seed": 73129,
+    "tolerance_nm": 0.25,
+    "max_iterations": 100,
+    "solvent": {
+      "kind": "tip3p_fill"
+    },
+    "groups": [
+      {
+        "id": "zil_bulk",
+        "component_id": "ZIL",
+        "count": 1,
+        "min_nm": [
+          0,
+          0,
+          0
+        ],
+        "max_nm": [
+          4.5,
+          4.5,
+          4.5
+        ]
+      },
+      {
+        "id": "cat_bulk",
+        "component_id": "CAT",
+        "count": 1,
+        "min_nm": [
+          0,
+          0,
+          0
+        ],
+        "max_nm": [
+          4.5,
+          4.5,
+          4.5
+        ]
+      },
+      {
+        "id": "ani_bulk",
+        "component_id": "ANI",
+        "count": 1,
+        "min_nm": [
+          0,
+          0,
+          0
+        ],
+        "max_nm": [
+          4.5,
+          4.5,
+          4.5
+        ]
+      }
+    ]
+  }
+}

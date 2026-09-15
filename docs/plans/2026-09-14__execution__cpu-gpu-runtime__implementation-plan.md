@@ -23,7 +23,7 @@ supersedes: []
 
 ### 1.1 首版边界
 
-目录与研究任务组织参见[基础组件、场景流程与统一研究包方案](2026-09-15__architecture__simulation-package-and-research-bundles__implementation-plan.md)。后续迁移仍复用本文的一套执行核心与 ExecutionProfile，不复制研究包 runner；本文旧源码路径属于当前基线，迁移时按责任映射更新。Run 格式升级统一设计一次，目录迁移不额外制造另一套 v3。两份方案目前均不表示相关功能已实施。
+目录与研究任务组织参见[基础组件、场景流程与统一研究包方案](2026-09-15__architecture__simulation-package-and-research-bundles__implementation-plan.md)。后续迁移仍复用本文的一套执行核心与 ExecutionProfile，不复制研究包 runner；本文旧源码路径属于执行层方案的定位基线，迁移时按责任映射更新。Run 格式升级统一设计一次，目录迁移不额外制造另一套 v3。架构方案的 A 批已开始，不表示本文执行资源、长任务或 GPU 能力已实施。
 
 - 运行方式：原生 macOS/Linux、单机 GROMACS；CPU 或单 GPU 配合 CPU。
 - Mac：开发、输入检查、CPU 短测及已有支持范围内的小任务。
@@ -38,19 +38,19 @@ supersedes: []
 
 ## 2. 当前代码基线与缺口
 
-下列是 2026-09-14 的源码事实，不是实现后的能力描述。当前实际入口见[模块 README](../../materials_simulation/README.md)。
+下列是 2026-09-14 的源码事实，不是实现后的能力描述。当前实际入口见[模块 README](../../docs/guides/simulation.md)。
 
 | 现状 | 证据 | 必要变化 |
 |---|---|---|
-| `mdrun` 固定 `-nb cpu -pme cpu`、一个 thread-MPI rank | [gromacs_stage.py](../../materials_simulation/materials_sim/gromacs_stage.py) | 按执行配置生成 CPU/GPU 参数 |
-| 只有线程与墙钟 CLI 参数，没有资源配置文件 | [cli.py](../../materials_simulation/materials_sim/cli.py) | 加入独立资源入口，冻结解析结果 |
-| 只接受 `engineering_smoke` | [config_v2.py](../../materials_simulation/materials_sim/config_v2.py) | 区分用途、科学批准与资源预算 |
-| MD 每段最多 2,000 步，并强制每 100 步输出 | [protocol.py](../../materials_simulation/materials_sim/protocol.py) | 短测约束与非短测协议分开 |
-| 最多 8 线程、墙钟参数 600 秒 | [execute.py](../../materials_simulation/materials_sim/execute.py) | 变为明确的执行预算，不取消有限预算原则 |
-| 只解析引擎版本、路径、平台与二进制哈希 | [gromacs.py](../../materials_simulation/materials_sim/gromacs.py) | 增加构建能力、请求设备和实际卸载证据 |
-| 执行要求引擎身份与构建时一致 | [execute.py](../../materials_simulation/materials_sim/execute.py) | 保留保护；首版在目标服务器新建 Run |
-| 检查点间隔为 0.01 分钟；阶段输出保留完整副本 | [gromacs_stage.py](../../materials_simulation/materials_sim/gromacs_stage.py) | 按任务设置间隔与存储预算 |
-| 每个分析任务复制输入轨迹并核查哈希 | [analysis.py](../../materials_simulation/materials_sim/analysis.py) | 保留原 Run 保护，明确复制成本与容量上限 |
+| `mdrun` 固定 `-nb cpu -pme cpu`、一个 thread-MPI rank | [gromacs_stage.py](../../src/materiasim/engines/gromacs/stage.py) | 按执行配置生成 CPU/GPU 参数 |
+| 只有线程与墙钟 CLI 参数，没有资源配置文件 | [cli.py](../../src/materiasim/cli.py) | 加入独立资源入口，冻结解析结果 |
+| 只接受 `engineering_smoke` | [config_v2.py](../../src/materiasim/specs/experiment.py) | 区分用途、科学批准与资源预算 |
+| MD 每段最多 2,000 步，并强制每 100 步输出 | [protocol.py](../../src/materiasim/specs/protocol.py) | 短测约束与非短测协议分开 |
+| 最多 8 线程、墙钟参数 600 秒 | [execute.py](../../src/materiasim/workflows/execute.py) | 变为明确的执行预算，不取消有限预算原则 |
+| 只解析引擎版本、路径、平台与二进制哈希 | [gromacs.py](../../src/materiasim/engines/gromacs/command.py) | 增加构建能力、请求设备和实际卸载证据 |
+| 执行要求引擎身份与构建时一致 | [execute.py](../../src/materiasim/workflows/execute.py) | 保留保护；首版在目标服务器新建 Run |
+| 检查点间隔为 0.01 分钟；阶段输出保留完整副本 | [gromacs_stage.py](../../src/materiasim/engines/gromacs/stage.py) | 按任务设置间隔与存储预算 |
+| 每个分析任务复制输入轨迹并核查哈希 | [analysis.py](../../src/materiasim/workflows/analysis.py) | 保留原 Run 保护，明确复制成本与容量上限 |
 
 目前的原子数、组分数、盒形、势函数和积分器限制还包含构建器与模型能力边界，不能全部当成 CPU 限制删除。例如装填几何检查包含两两距离计算；提高规模上限前须评估复杂度。本轮先保持已验收体系规模，优先支持更长时间的运行。
 

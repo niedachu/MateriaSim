@@ -1,0 +1,10 @@
+; GAFF2 solute with GROMACS-distributed Amber14SB defaults and TIP3P water.
+#include "amber14sb.ff/forcefield.itp"
+#include "zil.itp"
+#include "amber14sb.ff/tip3p.itp"
+
+[ system ]
+Single ZIL molecule in excess water
+
+[ molecules ]
+ZIL     1

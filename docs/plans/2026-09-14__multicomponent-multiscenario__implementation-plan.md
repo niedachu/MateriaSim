@@ -39,31 +39,31 @@ M4、M5 在 M1—M3 的交接约定稳定后可分别推进；不要求先完成
 
 - M1 已完成 macOS CPU 工程验收：v2 当前子集、独立模型/包/协议、可选分析、可命名且可重复类型的阶段、明确状态/时间交接、GROMACS 适配器和 v1 只读历史兼容。
 - 37 项测试通过；两个真实 ZIL 短程 Run 通过，其中包含预算中断/原检查点恢复、变更拒绝、非 prod 中间阶段分析、非零时间/步数原点。旧轨迹 21 帧计数一致，149 个历史文件及清单保持不变。
-- M2 已完成当前 macOS CPU 子集：ZIL＋水与预建 CAT/ANI＋水使用同一核心，45 项测试通过；各完成 8 ps、恢复保护与各 21 帧算法对照通过。同一新 Mac 固定帧下旧/新拓扑的能量/力迁移比较通过，88 个指定旧资产文件保持不变。详见 [M2 记录](../../materials_simulation/docs/2026-09-14__m2-core-reuse-acceptance.md)。
-- M3a 已有模型子集通过：原生 Packmol 21.2.3；ZIL×2＋水、CAT×2＋ANI×2＋水、ZIL＋CAT＋ANI＋水、ZIL×2 无水周期盒，整数计数、区域/实例映射和参数合并；66 项测试通过，四例真实短程与独立逐帧接触分析通过，含三组分真实中断/恢复及隔离负例。见 [M3 子集记录](../../materials_simulation/docs/2026-09-14__m3-packing-subset-acceptance.md)。
+- M2 已完成当前 macOS CPU 子集：ZIL＋水与预建 CAT/ANI＋水使用同一核心，45 项测试通过；各完成 8 ps、恢复保护与各 21 帧算法对照通过。同一新 Mac 固定帧下旧/新拓扑的能量/力迁移比较通过，88 个指定旧资产文件保持不变。详见 [M2 记录](../../docs/validation/2026-09-14__m2-core-reuse-acceptance.md)。
+- M3a 已有模型子集通过：原生 Packmol 21.2.3；ZIL×2＋水、CAT×2＋ANI×2＋水、ZIL＋CAT＋ANI＋水、ZIL×2 无水周期盒，整数计数、区域/实例映射和参数合并；66 项测试通过，四例真实短程与独立逐帧接触分析通过，含三组分真实中断/恢复及隔离负例。见 [M3 子集记录](../../docs/validation/2026-09-14__m3-packing-subset-acceptance.md)。
 - M3 整体未完成：尚缺选定混合溶剂和其按数量共装，浓度换算未实现；M4—M6、Linux/GPU、平衡与材料物性未验收。旧 CAT/ANI 的 -maxsol 重新加水存在随机删水，不保证旧初态字节复现；冻结资产/拓扑未变，差异及保留失败详见 M3 记录。
-- 证据与具体限制见 [M1 验收记录](../../materials_simulation/docs/2026-09-14__m1-core-acceptance.md)。运行数据在独立临时工程目录，未作为长期科研归档。
+- 证据与具体限制见 [M1 验收记录](../../docs/validation/2026-09-14__m1-core-acceptance.md)。运行数据在独立临时工程目录，未作为长期科研归档。
 
 ## 2. 与总体方案和当前实现的关系
 
-架构与研究组织补充方案：[基础组件、场景流程与统一研究包](2026-09-15__architecture__simulation-package-and-research-bundles__implementation-plan.md)。该草案管理可安装包、共享资产、研究任务编排与分阶段目录迁移；目前仅编写方案，不改变本文 M1—M6 进度。后续批准实施时，本文暂不搬目录的阶段安排按该方案协调，历史验收事实保持不变。
+架构与研究组织补充方案：[基础组件、场景流程与统一研究包](2026-09-15__architecture__simulation-package-and-research-bundles__implementation-plan.md)。该方案管理可安装包、共享资产、研究任务编排与分阶段目录迁移；2026-09-15 已授权并开始 A 批职责拆分，不改变本文 M1—M6 材料能力进度。本文暂不搬目录的阶段安排按该方案分批协调，历史验收事实保持不变。
 
 执行资源补充方案：[CPU 测试与小任务、GPU 主力计算](2026-09-14__execution__cpu-gpu-runtime__implementation-plan.md)。该方案于 2026-09-14 新增，当前仅为草案：先在无 GPU 的 Mac 上实现和验证共用执行层，再在 Linux 服务器验收 GPU。它不改变本文 M1—M6 的材料能力进度，也不表示正式长任务或 GPU 已实现。
 
 本文件是[总体升级方案](2026-09-14__multicomponent-simulation__upgrade-plan.md)在 P1a 后的实施依据。总体方案保留长期科学边界和历史 P 阶段描述；本轮范围、先后顺序及完成标准以本文 M1—M6 为准。新增需求不能回写为历史已验收事实。
 
-现有能力以[模块 README](../../materials_simulation/README.md)和 [M3 子集记录](../../materials_simulation/docs/2026-09-14__m3-packing-subset-acceptance.md)为准。下表保留 M1 实施前的定位基线；不是对当前源码的状态断言。原 [Mac 验收记录](../../materials_simulation/docs/2026-09-14__mac-framework-acceptance.md)不改写，M1 对其原轨迹另做独立回归。
+现有能力以[模块 README](../../docs/guides/simulation.md)和 [M3 子集记录](../../docs/validation/2026-09-14__m3-packing-subset-acceptance.md)为准。下表保留 M1 实施前的定位基线；不是对当前源码的状态断言。原 [Mac 验收记录](../../docs/validation/2026-09-14__mac-framework-acceptance.md)不改写，M1 对其原轨迹另做独立回归。
 
 | M1 实施前限制 | 原责任位置 | 要解决的问题 |
 |---|---|---|
-| 模型必须引用坐标、拓扑、四个 MDP，力场名必须以 `.ff` 结尾 | [schema.py](../../materials_simulation/materials_sim/schema.py) | 组分模型与协议、GROMACS 格式耦合 |
-| 固定建盒、加水，并复制选定的安装态力场目录与水库 | [build.py](../../materials_simulation/materials_sim/build.py) | 构建策略和资产冻结应按真实模型依赖决定 |
-| `atom_mapping()` 要求存在 SOL、逐原子电荷/质量及三个正交盒长 | [topology.py](../../materials_simulation/materials_sim/topology.py) | 不能作为全部固相和模型的共同前提 |
-| `STAGES`、`prod` 终点和阶段速度生成有固定假设 | [schema.py](../../materials_simulation/materials_sim/schema.py)、[protocol.py](../../materials_simulation/materials_sim/protocol.py)、[execute.py](../../materials_simulation/materials_sim/execute.py) | 阶段 ID、类型、状态传递与终点必须解耦 |
-| `compile_stage()` 在 build 内，mdrun 和日志/检查点解释在 execute 内 | [build.py](../../materials_simulation/materials_sim/build.py)、[execute.py](../../materials_simulation/materials_sim/execute.py) | 增加第二引擎不能只新增一个调用文件 |
-| 分析固定读取 `stages/prod/md.gro` 与 `md.xtc`，要求水化配置 | [analysis.py](../../materials_simulation/materials_sim/analysis.py) | 分析应绑定产物与任务，而非固定阶段名 |
-| 公共 Run 校验要求当前源码哈希一致，源码清单只扫描包根 `.py` | [state.py](../../materials_simulation/materials_sim/state.py) | 历史读取与执行兼容分开；拆包时不能漏记实现 |
-| CLI 的 `--through` 固定选择 STAGES，doctor 固定检查 GROMACS | [cli.py](../../materials_simulation/materials_sim/cli.py) | 查询、阶段和环境检查按已实现能力解析 |
+| 模型必须引用坐标、拓扑、四个 MDP，力场名必须以 `.ff` 结尾 | [schema.py](../../src/materiasim/specs/schema.py) | 组分模型与协议、GROMACS 格式耦合 |
+| 固定建盒、加水，并复制选定的安装态力场目录与水库 | [build.py](../../src/materiasim/workflows/build.py) | 构建策略和资产冻结应按真实模型依赖决定 |
+| `atom_mapping()` 要求存在 SOL、逐原子电荷/质量及三个正交盒长 | [topology.py](../../src/materiasim/engines/gromacs/topology.py) | 不能作为全部固相和模型的共同前提 |
+| `STAGES`、`prod` 终点和阶段速度生成有固定假设 | [schema.py](../../src/materiasim/specs/schema.py)、[protocol.py](../../src/materiasim/specs/protocol.py)、[execute.py](../../src/materiasim/workflows/execute.py) | 阶段 ID、类型、状态传递与终点必须解耦 |
+| `compile_stage()` 在 build 内，mdrun 和日志/检查点解释在 execute 内 | [build.py](../../src/materiasim/workflows/build.py)、[execute.py](../../src/materiasim/workflows/execute.py) | 增加第二引擎不能只新增一个调用文件 |
+| 分析固定读取 `stages/prod/md.gro` 与 `md.xtc`，要求水化配置 | [analysis.py](../../src/materiasim/workflows/analysis.py) | 分析应绑定产物与任务，而非固定阶段名 |
+| 公共 Run 校验要求当前源码哈希一致，源码清单只扫描包根 `.py` | [state.py](../../src/materiasim/runtime/state.py) | 历史读取与执行兼容分开；拆包时不能漏记实现 |
+| CLI 的 `--through` 固定选择 STAGES，doctor 固定检查 GROMACS | [cli.py](../../src/materiasim/cli.py) | 查询、阶段和环境检查按已实现能力解析 |
 | CAT/ANI 仍保留独立 runner | [离子对入口](../../ion_pair_hydration_md/formal/run_production.py) | 模型资产和跨案例复用须在 M2 核查 |
 
 可复用：原生 GROMACS 进程管理、输入快照、SHA-256、POSIX 单写者锁、检查点检查、attempt 证据、水化计数及已有测试。复用算法不表示原有接口和所有工程限制原封不动。
@@ -443,7 +443,7 @@ M1/M2 与 M3a 已有模型自动装配子集已通过 macOS CPU 工程验收；M
 
 ### M1：数据、阶段与历史边界
 
-状态：已完成当前 ZIL 子集的核心重构与 macOS CPU 工程验收。源码基线、运行、检查点恢复、输入/有效物理参数回归和旧轨迹逐帧比较均有 [独立证据](../../materials_simulation/docs/2026-09-14__m1-core-acceptance.md)。不据此宣称新增材料支持或 Linux/科学验收完成。
+状态：已完成当前 ZIL 子集的核心重构与 macOS CPU 工程验收。源码基线、运行、检查点恢复、输入/有效物理参数回归和旧轨迹逐帧比较均有 [独立证据](../../docs/validation/2026-09-14__m1-core-acceptance.md)。不据此宣称新增材料支持或 Linux/科学验收完成。
 
 依次实施：保存 v1 基线 → 拆历史读取/完整性/执行校验 → 拆配置与协议 → 用已解析阶段列表替代固定 STAGES → 产物绑定分析 → GROMACS 专有操作与公共编排分离。
 
@@ -453,7 +453,7 @@ M1/M2 与 M3a 已有模型自动装配子集已通过 macOS CPU 工程验收；M
 
 ### M2：既有资产共用核心
 
-状态：当前子集已通过 macOS CPU 工程验收，见 [M2 证据](../../materials_simulation/docs/2026-09-14__m2-core-reuse-acceptance.md)。CAT/ANI 是独立模型并保持原 ITP/干态构型，新水盒严格核对 CAT 1＋ANI 1＋SOL 2957。旧 Windows 完整含水坐标与安装库快照缺失，因此迁移数值比较使用新 Mac 同帧、当前冻结库和同有效参数，不能声称历史 Windows 重现。
+状态：当前子集已通过 macOS CPU 工程验收，见 [M2 证据](../../docs/validation/2026-09-14__m2-core-reuse-acceptance.md)。CAT/ANI 是独立模型并保持原 ITP/干态构型，新水盒严格核对 CAT 1＋ANI 1＋SOL 2957。旧 Windows 完整含水坐标与安装库快照缺失，因此迁移数值比较使用新 Mac 同帧、当前冻结库和同有效参数，不能声称历史 Windows 重现。
 
 核查 ZIL、CAT、ANI 和水的坐标/拓扑/来源；建立独立模型与协议、模型包及来源映射。固定构型导入用于迁移回归，不能冒充自动组装。
 
@@ -461,7 +461,7 @@ M1/M2 与 M3a 已有模型自动装配子集已通过 macOS CPU 工程验收；M
 
 ### M3：多组分液体实用版
 
-状态：**部分实现，不得标整体完成**。已交付 T3/T4/T5 和 T6 当前子集：四种已有模型自动装配场景、真实恢复、组分接触、能力查询及负例；水以 bundle 覆盖的填充策略加入，记录实际数量，不是独立溶剂模板共装。公共参数合并仅覆盖显式 GAFF 有限分子，不是任意材料模型兼容器。详见 [M3 子集验收](../../materials_simulation/docs/2026-09-14__m3-packing-subset-acceptance.md)。
+状态：**部分实现，不得标整体完成**。已交付 T3/T4/T5 和 T6 当前子集：四种已有模型自动装配场景、真实恢复、组分接触、能力查询及负例；水以 bundle 覆盖的填充策略加入，记录实际数量，不是独立溶剂模板共装。公共参数合并仅覆盖显式 GAFF 有限分子，不是任意材料模型兼容器。详见 [M3 子集验收](../../docs/validation/2026-09-14__m3-packing-subset-acceptance.md)。
 
 下一步必须确定一组真实混合溶剂和完整模型，补齐水/其他溶剂按整数数量共同装配、实际配比与 T9；再按真实需求实施 M3b。不得把已有水例或无水盒代替混合溶剂退出条件。
 
@@ -554,7 +554,7 @@ M4—M6 必须另填材料专属预算卡：粒子数、链长/链数/晶胞、�
 
 ### 10.4 测试方式
 
-继续使用模块 README 的真实 unittest 入口，不新增 pytest 依赖。现有 [test_framework.py](../../materials_simulation/tests/test_framework.py)、[test_analysis.py](../../materials_simulation/tests/test_analysis.py)和[恢复保护工具](../../materials_simulation/tests/check_resume_guards.py)、[分析对照工具](../../materials_simulation/tests/compare_analysis.py)按职责补充或拆分，不复制一个带材料名字的新 runner。
+继续使用模块 README 的真实 unittest 入口，不新增 pytest 依赖。现有 [test_framework.py](../../tests/unit/test_framework.py)、[test_analysis.py](../../tests/unit/test_analysis.py)和[恢复保护工具](../../tests/acceptance/check_resume_guards.py)、[分析对照工具](../../tests/acceptance/compare_analysis.py)按职责补充或拆分，不复制一个带材料名字的新 runner。
 
 修订 2 只做文档检查。修订 3 对应 M1 的 37 项测试与真实短程/恢复/分析验收；结果见独立记录，不用旧 22 项记录代替新能力验证。T1/T6 的 M1 部分、T7/T8 当前水盒子集通过，其余材料/场景案例待各阶段落实。
 

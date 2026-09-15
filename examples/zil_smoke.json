@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "id": "zil_smoke",
+  "purpose": "engineering_smoke",
+  "model": "../catalog/models/zil_model.json",
+  "box_nm": [
+    4.5,
+    4.5,
+    4.5
+  ],
+  "seed": 271828,
+  "steps": {
+    "em": 5000,
+    "nvt": 1000,
+    "npt": 1000,
+    "prod": 2000
+  },
+  "analysis": {
+    "water_oxygen_selection": "resname SOL and name OW",
+    "sites": {
+      "sulfonate": {
+        "selection": "resname ZIL and name O1 O4 O5",
+        "mode": "atoms",
+        "cutoff_nm": 0.35
+      },
+      "ether": {
+        "selection": "resname ZIL and name O2 O3",
+        "mode": "atoms",
+        "cutoff_nm": 0.35
+      },
+      "imidazolium": {
+        "selection": "resname ZIL and name N1 C4 N2 C10 C11",
+        "mode": "atoms",
+        "cutoff_nm": 0.35
+      }
+    }
+  }
+}

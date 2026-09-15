@@ -1,0 +1,18 @@
+{
+  "id": "ani_gaff2_am1bcc",
+  "component_id": "ANI",
+  "coordinates": "ani.gro",
+  "topology": "ani.itp",
+  "files": [
+    {
+      "name": "ani.gro",
+      "source": "ani/ani.gro",
+      "sha256": "5f26044967ca55f30e3b3912ef8df8d589f0a3b47c62c2a1136ffaf66b1c352d"
+    },
+    {
+      "name": "ani.itp",
+      "source": "ani/ani.itp",
+      "sha256": "bda34347254862e2476aa75bfad7d0ab394aaeab56bcfdb1c5fbcd376a04416d"
+    }
+  ]
+}

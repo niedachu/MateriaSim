@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "created": "2026-09-15",
+  "policy": "Original assets retained; new catalog bytes identical; frozen model content identities unchanged",
+  "assets": [
+    {
+      "source": "ion_pair_hydration_md/smoke/input/pair_initial.gro",
+      "target": "catalog/models/ion_pair/pair_initial.gro",
+      "sha256": "4721b7eb75f8177944018af633bca657b4e6de88fdaa025a897a2c341f1cc8c4"
+    },
+    {
+      "source": "ion_pair_hydration_md/topology/system.top",
+      "target": "catalog/models/ion_pair/system.top",
+      "sha256": "ee20793fd8c876d486dcf9020b83d234e4fb072c7a0de451f9e1763347d82ae8"
+    },
+    {
+      "source": "zwitterion_hydration_md/topology/zil.itp",
+      "target": "catalog/models/zil/zil.itp",
+      "sha256": "11661b7ad9673d96db7f2be8161e1dad40dadba85b31334bc5f29c87b231eb7d"
+    },
+    {
+      "source": "zwitterion_hydration_md/topology/system.top",
+      "target": "catalog/models/zil/system.top",
+      "sha256": "00c9027ff3357a52c0fe27e144670440ab023224b4d16fe3a825d258b0200fc5"
+    },
+    {
+      "source": "zwitterion_hydration_md/topology/zil_intermediate.gro",
+      "target": "catalog/models/zil/zil_intermediate.gro",
+      "sha256": "1806d4a68ed3e0ec9dc19d26be25fbd009940eb2d5321de15a10becfaf5283e4"
+    },
+    {
+      "source": "zwitterion_hydration_md/mdp/em.mdp",
+      "target": "catalog/protocols/zil/em.mdp",
+      "sha256": "340a02e211d7f3ab446b9827d2e7bc942f72065aa19ec7ddd4e8b1352119bfa2"
+    },
+    {
+      "source": "zwitterion_hydration_md/mdp/nvt.mdp",
+      "target": "catalog/protocols/zil/nvt.mdp",
+      "sha256": "880574d96438d49731df6b7caebfc2c1b602e40648735725c2d383c627d5fc1e"
+    },
+    {
+      "source": "zwitterion_hydration_md/mdp/npt.mdp",
+      "target": "catalog/protocols/zil/npt.mdp",
+      "sha256": "103100b07b60c6eead8be17a3c208bd05383f530fa7fbce2be78c0a1f9d6ef75"
+    },
+    {
+      "source": "zwitterion_hydration_md/mdp/prod.mdp",
+      "target": "catalog/protocols/zil/prod.mdp",
+      "sha256": "c3da09253c7e71b5726b12bc6ff108f25c605e46bff9bd43dc3ad5228def4d63"
+    },
+    {
+      "source": "ion_pair_hydration_md/parameterization/results/cat/cat.gro",
+      "target": "catalog/models/cat/cat.gro",
+      "sha256": "e108e97b4270715fc3805592bef0b44c67ee71fc547023732c5a7bcde9820cda"
+    },
+    {
+      "source": "ion_pair_hydration_md/topology/cat.itp",
+      "target": "catalog/models/cat/cat.itp",
+      "sha256": "dd4571f3f2098dced5da1bd2bdaabdfe265c8b623e79f336b95fba05e3c0ae3d"
+    },
+    {
+      "source": "ion_pair_hydration_md/topology/gaff2_atomtypes.itp",
+      "target": "catalog/interaction_bundles/assets/gaff2_atomtypes.itp",
+      "sha256": "728655aa76aeeb6c463ac62d8462686f6162a7166803c14aafdb21607129f593"
+    },
+    {
+      "source": "ion_pair_hydration_md/parameterization/results/ani/ani.gro",
+      "target": "catalog/models/ani/ani.gro",
+      "sha256": "5f26044967ca55f30e3b3912ef8df8d589f0a3b47c62c2a1136ffaf66b1c352d"
+    },
+    {
+      "source": "ion_pair_hydration_md/topology/ani.itp",
+      "target": "catalog/models/ani/ani.itp",
+      "sha256": "bda34347254862e2476aa75bfad7d0ab394aaeab56bcfdb1c5fbcd376a04416d"
+    },
+    {
+      "source": "materials_simulation/examples/dry_em.mdp",
+      "target": "catalog/protocols/dry/dry_em.mdp",
+      "sha256": "435b9dc34c84376519bd308f9832b3e38e9f094d07ca6a14cd374b22a7ea6622"
+    },
+    {
+      "source": "ion_pair_hydration_md/smoke/input/em.mdp",
+      "target": "catalog/protocols/ions/em.mdp",
+      "sha256": "340a02e211d7f3ab446b9827d2e7bc942f72065aa19ec7ddd4e8b1352119bfa2"
+    },
+    {
+      "source": "ion_pair_hydration_md/smoke/input/nvt.mdp",
+      "target": "catalog/protocols/ions/nvt.mdp",
+      "sha256": "880574d96438d49731df6b7caebfc2c1b602e40648735725c2d383c627d5fc1e"
+    },
+    {
+      "source": "ion_pair_hydration_md/smoke/input/npt.mdp",
+      "target": "catalog/protocols/ions/npt.mdp",
+      "sha256": "103100b07b60c6eead8be17a3c208bd05383f530fa7fbce2be78c0a1f9d6ef75"
+    },
+    {
+      "source": "ion_pair_hydration_md/formal/input/prod.mdp",
+      "target": "catalog/protocols/ions/prod.mdp",
+      "sha256": "ae1e840fb8772ab834b7617d7661ce27514f6f90333ea10361f215893244d191"
+    }
+  ],
+  "documents": {
+    "materials_simulation/examples/cat_ani_smoke.json": "examples/cat_ani_smoke.json",
+    "materials_simulation/examples/zil_bundle.json": "catalog/interaction_bundles/zil_bundle.json",
+    "materials_simulation/examples/zil_model_v2.json": "catalog/models/zil_model_v2.json",
+    "materials_simulation/examples/zil_protocol.json": "catalog/protocols/zil_protocol.json",
+    "materials_simulation/examples/cat_model.json": "catalog/models/cat_model.json",
+    "materials_simulation/examples/zil_smoke_v2.json": "examples/zil_smoke_v2.json",
+    "materials_simulation/examples/zil_molecule.json": "catalog/models/zil_molecule.json",
+    "materials_simulation/examples/packed_ions_water.json": "examples/packed_ions_water.json",
+    "materials_simulation/examples/packed_mixture_bundle.json": "catalog/interaction_bundles/packed_mixture_bundle.json",
+    "materials_simulation/examples/ani_model.json": "catalog/models/ani_model.json",
+    "materials_simulation/examples/zil_model.json": "catalog/models/zil_model.json",
+    "materials_simulation/examples/packed_zil_water.json": "examples/packed_zil_water.json",
+    "materials_simulation/examples/dry_protocol.json": "catalog/protocols/dry_protocol.json",
+    "materials_simulation/examples/packed_zil_dry.json": "examples/packed_zil_dry.json",
+    "materials_simulation/examples/cat_ani_protocol.json": "catalog/protocols/cat_ani_protocol.json",
+    "materials_simulation/examples/zil_smoke.json": "examples/zil_smoke.json",
+    "materials_simulation/examples/packed_mixture_water.json": "examples/packed_mixture_water.json",
+    "materials_simulation/examples/cat_ani_bundle.json": "catalog/interaction_bundles/cat_ani_bundle.json",
+    "materials_simulation/examples/packed_zil_bundle.json": "catalog/interaction_bundles/packed_zil_bundle.json"
+  },
+  "code": {
+    "materials_simulation/tests/verify_m3_evidence.py": "tests/acceptance/verify_m3_evidence.py",
+    "materials_simulation/tests/check_resume_guards.py": "tests/acceptance/check_resume_guards.py",
+    "materials_simulation/tests/test_framework.py": "tests/unit/test_framework.py",
+    "materials_simulation/tests/compare_pair_single_point.py": "tests/acceptance/compare_pair_single_point.py",
+    "materials_simulation/tests/test_packing.py": "tests/unit/test_packing.py",
+    "materials_simulation/tests/audit_asset_dependencies.py": "tests/acceptance/audit_asset_dependencies.py",
+    "materials_simulation/tests/verify_architecture_a.py": "tests/acceptance/verify_architecture_a.py",
+    "materials_simulation/tests/test_architecture.py": "tests/unit/test_architecture.py",
+    "materials_simulation/tests/test_prebuilt.py": "tests/unit/test_prebuilt.py",
+    "materials_simulation/tests/test_analysis.py": "tests/unit/test_analysis.py",
+    "materials_simulation/tests/verify_m2_evidence.py": "tests/acceptance/verify_m2_evidence.py",
+    "materials_simulation/tests/verify_m1_evidence.py": "tests/acceptance/verify_m1_evidence.py",
+    "materials_simulation/tests/compare_analysis.py": "tests/acceptance/compare_analysis.py",
+    "materials_simulation/tests/test_contracts.py": "tests/unit/test_contracts.py",
+    "materials_simulation/materials_sim/files.py": "src/materiasim/storage.py",
+    "materials_simulation/materials_sim/build.py": "src/materiasim/workflows/build.py",
+    "materials_simulation/materials_sim/prebuilt.py": "src/materiasim/engines/gromacs/prebuilt.py",
+    "materials_simulation/materials_sim/analysis.py": "src/materiasim/workflows/analysis.py",
+    "materials_simulation/materials_sim/schema.py": "src/materiasim/specs/schema.py",
+    "materials_simulation/materials_sim/state.py": "src/materiasim/runtime/state.py",
+    "materials_simulation/materials_sim/__main__.py": "src/materiasim/__main__.py",
+    "materials_simulation/materials_sim/config_v2.py": "src/materiasim/specs/experiment.py",
+    "materials_simulation/materials_sim/hydration.py": "src/materiasim/analysis/hydration.py",
+    "materials_simulation/materials_sim/scenarios/__init__.py": "src/materiasim/scenarios/__init__.py",
+    "materials_simulation/materials_sim/scenarios/packed.py": "src/materiasim/scenarios/packed.py",
+    "materials_simulation/materials_sim/topology.py": "src/materiasim/engines/gromacs/topology.py",
+    "materials_simulation/materials_sim/gromacs_stage.py": "src/materiasim/engines/gromacs/stage.py",
+    "materials_simulation/materials_sim/engines/gromacs/coordinates.py": "src/materiasim/engines/gromacs/coordinates.py",
+    "materials_simulation/materials_sim/engines/gromacs/parameters.py": "src/materiasim/engines/gromacs/parameters.py",
+    "materials_simulation/materials_sim/engines/gromacs/mdp.py": "src/materiasim/engines/gromacs/mdp.py",
+    "materials_simulation/materials_sim/engines/gromacs/__init__.py": "src/materiasim/engines/gromacs/__init__.py",
+    "materials_simulation/materials_sim/engines/__init__.py": "src/materiasim/engines/__init__.py",
+    "materials_simulation/materials_sim/cli.py": "src/materiasim/cli.py",
+    "materials_simulation/materials_sim/packmol.py": "src/materiasim/builders/packmol.py",
+    "materials_simulation/materials_sim/gromacs_build.py": "src/materiasim/engines/gromacs/build.py",
+    "materials_simulation/materials_sim/gromacs.py": "src/materiasim/engines/gromacs/command.py",
+    "materials_simulation/materials_sim/__init__.py": "src/materiasim/__init__.py",
+    "materials_simulation/materials_sim/runtime/process.py": "src/materiasim/runtime/process.py",
+    "materials_simulation/materials_sim/runtime/__init__.py": "src/materiasim/runtime/__init__.py",
+    "materials_simulation/materials_sim/component_contacts.py": "src/materiasim/analysis/component_contacts.py",
+    "materials_simulation/materials_sim/records.py": "src/materiasim/runtime/records.py",
+    "materials_simulation/materials_sim/execute.py": "src/materiasim/workflows/execute.py",
+    "materials_simulation/materials_sim/protocol.py": "src/materiasim/specs/protocol.py",
+    "materials_simulation/materials_sim/gromacs_packed.py": "src/materiasim/engines/gromacs/packed.py",
+    "materials_simulation/materials_sim/specs/composition.py": "src/materiasim/specs/composition.py",
+    "materials_simulation/materials_sim/specs/__init__.py": "src/materiasim/specs/__init__.py",
+    "materials_simulation/materials_sim/specs/analysis.py": "src/materiasim/specs/analysis.py",
+    "materials_simulation/materials_sim/builders/__init__.py": "src/materiasim/builders/__init__.py",
+    "materials_simulation/materials_sim/builders/regions.py": "src/materiasim/builders/regions.py"
+  },
+  "guides": {
+    "materials_simulation/AGENTS.md": "src/materiasim/AGENTS.md",
+    "materials_simulation/README.md": "docs/guides/simulation.md",
+    "materials_simulation/docs/2026-09-15__architecture-a-acceptance.md": "docs/validation/2026-09-15__architecture-a-acceptance.md",
+    "materials_simulation/docs/2026-09-14__mac-framework-acceptance.md": "docs/validation/2026-09-14__mac-framework-acceptance.md",
+    "materials_simulation/docs/2026-09-14__m1-core-acceptance.md": "docs/validation/2026-09-14__m1-core-acceptance.md",
+    "materials_simulation/docs/2026-09-14__m2-core-reuse-acceptance.md": "docs/validation/2026-09-14__m2-core-reuse-acceptance.md",
+    "materials_simulation/docs/2026-09-14__m3-packing-subset-acceptance.md": "docs/validation/2026-09-14__m3-packing-subset-acceptance.md"
+  }
+}

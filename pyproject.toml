@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools==80.9.0", "wheel==0.48.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "materiasim"
+version = "0.1.0"
+description = "Traceable, bounded molecular simulation workflows and research bundles"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.optional-dependencies]
+analysis = ["MDAnalysis==2.7.0", "numpy==1.26.4"]
+
+[project.scripts]
+materiasim = "materiasim.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["materiasim*"]

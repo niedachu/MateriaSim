@@ -1,0 +1,83 @@
+{
+  "id": "cat_ani_engineering_protocol",
+  "files": [
+    {
+      "name": "em.mdp",
+      "source": "ions/em.mdp",
+      "sha256": "340a02e211d7f3ab446b9827d2e7bc942f72065aa19ec7ddd4e8b1352119bfa2"
+    },
+    {
+      "name": "nvt.mdp",
+      "source": "ions/nvt.mdp",
+      "sha256": "880574d96438d49731df6b7caebfc2c1b602e40648735725c2d383c627d5fc1e"
+    },
+    {
+      "name": "npt.mdp",
+      "source": "ions/npt.mdp",
+      "sha256": "103100b07b60c6eead8be17a3c208bd05383f530fa7fbce2be78c0a1f9d6ef75"
+    },
+    {
+      "name": "prod.mdp",
+      "source": "ions/prod.mdp",
+      "sha256": "ae1e840fb8772ab834b7617d7661ce27514f6f90333ea10361f215893244d191"
+    }
+  ],
+  "stages": [
+    {
+      "id": "em",
+      "type": "minimization",
+      "mdp": "em.mdp",
+      "steps": 5000,
+      "input": {
+        "stage_id": null,
+        "kind": "coordinates"
+      },
+      "velocities": "none",
+      "seed": null,
+      "time_origin_ps": 0,
+      "step_origin": 0
+    },
+    {
+      "id": "nvt",
+      "type": "dynamics",
+      "mdp": "nvt.mdp",
+      "steps": 1000,
+      "input": {
+        "stage_id": "em",
+        "kind": "coordinates"
+      },
+      "velocities": "generate",
+      "seed": 192837,
+      "time_origin_ps": 0,
+      "step_origin": 0
+    },
+    {
+      "id": "npt",
+      "type": "dynamics",
+      "mdp": "npt.mdp",
+      "steps": 1000,
+      "input": {
+        "stage_id": "nvt",
+        "kind": "checkpoint"
+      },
+      "velocities": "inherit",
+      "seed": null,
+      "time_origin_ps": 0,
+      "step_origin": 0
+    },
+    {
+      "id": "prod",
+      "type": "dynamics",
+      "mdp": "prod.mdp",
+      "steps": 2000,
+      "input": {
+        "stage_id": "npt",
+        "kind": "checkpoint"
+      },
+      "velocities": "inherit",
+      "seed": null,
+      "time_origin_ps": 0,
+      "step_origin": 0
+    }
+  ]
+}
