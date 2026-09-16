@@ -1,15 +1,32 @@
 ---
-type: implementation-plan
-status: draft
-plan_kind: implementation-plan
-created: 2026-09-14
-last_updated: 2026-09-15
-owner: materials_simulation
-scope: 无 GPU 环境下实现 CPU/GPU 共用执行层、受控长任务与服务器验收准备
-implementation_status: 仅方案；未实施；本机无可供本任务验收的 GPU，Linux/GPU 待服务器实测
-parent_plan: 2026-09-14__multicomponent-multiscenario__implementation-plan.md
-supersedes: []
+{
+  "type": "work_plan",
+  "status": "active",
+  "plan_kind": "implementation-plan",
+  "owner": "materials_simulation",
+  "module": "materiasim",
+  "domain": "execution",
+  "created": "2026-09-14",
+  "last_updated": "2026-09-16",
+  "canonical": true,
+  "doc_id": "materiasim.plan.execution.cpu_gpu_runtime",
+  "source_path": "docs/plans/2026-09-14__execution__cpu-gpu-runtime__implementation-plan.md",
+  "supersedes": [],
+  "superseded_by": [],
+  "related_kb": [
+    "materiasim.kb.platform.capabilities",
+    "materiasim.kb.platform.configuration_components"
+  ],
+  "related_code": [],
+  "rag_exclude": true,
+  "scope": "无 GPU 环境下实现 CPU/GPU 共用执行层、受控长任务与服务器验收准备",
+  "implementation_status": "后继框架已覆盖部分执行预算、运行控制与候选 GPU 路径；Linux/GPU、长负载仍待实测，不再以历史未实施概括现状",
+  "original_type": "implementation-plan",
+  "parent_plan": "2026-09-14__multicomponent-multiscenario__implementation-plan.md"
+}
 ---
+
+> 2026-09-16 治理更新：后继框架已覆盖部分执行预算、运行控制与候选 GPU 路径；Linux/GPU、长负载仍待实测，不再以历史未实施概括现状。下文原始设计和当时的授权／状态保留为历史，不作为当前执行指令；当前归属与覆盖见[计划审计](MIGRATION_MAP.md)及[知识能力矩阵](../knowledge/platform/capabilities.md)。
 
 # CPU 测试与小任务、GPU 主力计算：执行层实施方案
 
@@ -249,3 +266,10 @@ cd /Users/niezhidong/Desktop/MateriaSim/materials_simulation
 ## 11. 本次文档交付记录
 
 2026-09-14：仅编写本方案并关联原实施方案；没有修改模拟源码、安装依赖、启动 MD 或执行 GPU 测试。本文的拟议字段、模块和新版本均不是当前已经可用的接口。
+
+
+## Knowledge Extraction（2026-09-16 文档治理）
+
+- 稳定的实际能力与限制归[能力矩阵](../knowledge/platform/capabilities.md)，组件／研究／证据职责归[配置与组件知识](../knowledge/platform/configuration_components.md)。
+- 本文原始阶段、建议和当时验收摘要保留历史，不回写原始 Run；当前覆盖与未决范围见[计划审计](MIGRATION_MAP.md)。
+- 本次只提取与整理文档，不新增本计划对应的材料、引擎或科学验收；部分后继覆盖不视为本计划全部完成。

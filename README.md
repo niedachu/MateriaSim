@@ -34,6 +34,8 @@ PYTHONPATH=src python -B -m unittest discover -s tests -v
 
 完整 MD 流程、GROMACS／开源工具／本项目的职责及不同材料场景的配置路线，见[MD 工作流程与工具边界指南](docs/guides/md-workflow-and-tool-boundaries.md)；其中候选接入项不代表已实现能力。
 
+科学依据、算法定义、模型兼容、参数语义与验证方法见[科学知识库](docs/knowledge/README.md)；当前支持范围见[能力矩阵](docs/knowledge/platform/capabilities.md)，后续工作见[计划索引](docs/plans/INDEX.md)。知识参考已建立，不表示聚合物、纳米材料等功能已接入，也不构成生产用途批准。
+
 单实验入口见[模拟指南](docs/guides/simulation.md)，多个条件与重复见[研究包指南](docs/guides/research.md)。首个可运行研究包是 [ZIL 数量工程验收](studies/zil_count_smoke/README.md)：
 
 ```sh
@@ -41,7 +43,7 @@ materiasim research validate studies/zil_count_smoke/research.json
 materiasim research plan studies/zil_count_smoke/research.json
 ```
 
-上述命令只预检和预览，不启动模拟；保存与执行必须指定新的仓库外输出位置。A—D 的 98 项测试与历史验收见[B—D 记录](docs/validation/2026-09-15__architecture-bcd-acceptance.md)，保留为当时事实。当前 Research v2 已能组织预建/装填场景、显式种子槽、无分析或两类已有接触分析，见[双场景双分析示例](studies/mixed_builders_smoke/README.md)；不支持任意字段扫描或科学置信区间。
+上述命令只预检和预览，不启动模拟；保存与执行必须指定新的仓库外输出位置。A—D 的 98 项测试与历史验收见[B—D 记录](docs/validation/2026-09-15__architecture-bcd-acceptance.md)，保留为当时事实。当前 Research v2 已能组织预建/装填场景、显式种子槽、无分析或已有接触分析，见[双场景双分析示例](studies/mixed_builders_smoke/README.md)；另已接入 [mass_density 整盒密度／体积](docs/knowledge/algorithms/bulk_density.md)，消费封存 EDR 而非猜测原子质量。不支持任意字段扫描或科学置信区间；新增分析不代表乙醇混合体系已验证。
 
 当前[可扩展框架方案](docs/plans/2026-09-15__framework__extensible-core-v1__implementation-plan.md)已落地 Experiment/Run v3：组分/模型、带格式资产、边界/构建器、物理协议与 CPU 执行配置分开表达；现有引擎/构建/分析消费统一交接契约。v2 配置仍可新建任务，经确定性转换生成 v3 Run，保留原文与来源报告；旧 Run 不改写、不由新代码强行续跑。[原生 v3 示例](examples/v3/packed_zil_water.json)可直接校验与构建，`materiasim migrate examples/packed_zil_water.json` 只预览转换。
 

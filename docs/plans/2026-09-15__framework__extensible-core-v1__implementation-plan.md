@@ -1,20 +1,36 @@
 ---
-type: implementation-plan
-status: completed
-plan_kind: implementation-plan
-created: 2026-09-15
-last_updated: 2026-09-15
-owner: MateriaSim
-scope: 在现有 A—D 核心上完成可扩展框架第一版；不增加具体材料的科学支持声明
-implementation_status: P0—P6 本地框架范围完成；193 项测试、16 个 Mac CPU Run/58 个阶段及离线安装态通过；Linux/GPU、长负载和新材料科学支持未验收，准确边界见第 20 节
-canonical: true
-doc_id: materiasim-framework-extensible-core-v1-20260915
-related_plans:
-  - 2026-09-15__architecture__simulation-package-and-research-bundles__implementation-plan.md
-  - 2026-09-14__execution__cpu-gpu-runtime__implementation-plan.md
-  - 2026-09-14__multicomponent-multiscenario__implementation-plan.md
-supersedes: []
+{
+  "type": "work_plan",
+  "status": "completed",
+  "plan_kind": "implementation-plan",
+  "owner": "MateriaSim",
+  "module": "materiasim",
+  "domain": "framework",
+  "created": "2026-09-15",
+  "last_updated": "2026-09-16",
+  "canonical": true,
+  "doc_id": "materiasim-framework-extensible-core-v1-20260915",
+  "source_path": "docs/plans/2026-09-15__framework__extensible-core-v1__implementation-plan.md",
+  "supersedes": [],
+  "superseded_by": [],
+  "related_kb": [
+    "materiasim.kb.platform.capabilities",
+    "materiasim.kb.platform.configuration_components"
+  ],
+  "related_code": [],
+  "rag_exclude": true,
+  "scope": "在现有 A—D 核心上完成可扩展框架第一版；不增加具体材料的科学支持声明",
+  "implementation_status": "P0—P6 本地框架范围已交付；保留历史验收，Linux/GPU、长负载及新材料科学支持未验收",
+  "original_type": "implementation-plan",
+  "related_plan_files": [
+    "2026-09-15__architecture__simulation-package-and-research-bundles__implementation-plan.md",
+    "2026-09-14__execution__cpu-gpu-runtime__implementation-plan.md",
+    "2026-09-14__multicomponent-multiscenario__implementation-plan.md"
+  ]
+}
 ---
+
+> 2026-09-16 治理更新：P0—P6 本地框架范围已交付；保留历史验收，Linux/GPU、长负载及新材料科学支持未验收。下文原始设计和当时的授权／状态保留为历史，不作为当前执行指令；当前归属与覆盖见[计划审计](MIGRATION_MAP.md)及[知识能力矩阵](../knowledge/platform/capabilities.md)。
 
 # MateriaSim 可扩展框架第一版：具体改动方案
 
@@ -596,3 +612,10 @@ Linux/GPU 真实验收、长负载、新材料与科学质量仍未评估。无�
 本地证据审核不是认证签名；生产对真实未验证模型仍拒绝。配置可表达较长目标，不代表长负载已经测试。单任务当前原子/几何/组分限制保持；Research 批次仍最多 1800 秒/1 GiB。
 
 复制预算及周期监控不是硬配额；进程组清理以最外层监督器存活为条件，不保证它遭 SIGKILL、机器掉电或恶意进程逃逸后仍回收；未知交接继续保守拒绝。整机灾备、Linux/GPU、远程调度、大轨迹、新材料与科学收敛留待对应环境/研究任务，不属于本次已验证结论。
+
+
+## Knowledge Extraction（2026-09-16 文档治理）
+
+- 稳定的实际能力与限制归[能力矩阵](../knowledge/platform/capabilities.md)，组件／研究／证据职责归[配置与组件知识](../knowledge/platform/configuration_components.md)。
+- 本文原始阶段、建议和当时验收摘要保留历史，不回写原始 Run；当前覆盖与未决范围见[计划审计](MIGRATION_MAP.md)。
+- 本次只提取与整理文档，不新增本计划对应的材料、引擎或科学验收；部分后继覆盖不视为本计划全部完成。

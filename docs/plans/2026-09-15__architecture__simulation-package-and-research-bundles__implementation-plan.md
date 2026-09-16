@@ -1,17 +1,35 @@
 ---
-type: implementation-plan
-status: active
-plan_kind: implementation-plan
-created: 2026-09-15
-last_updated: 2026-09-15
-owner: MateriaSim
-scope: 可安装模拟包、可复用基础组件、场景流程、统一研究包及现有资产的分阶段迁移
-implementation_status: A—D 当前受限子集完成；98 项测试、开发/发行安装、四任务研究与四场景及批次检查点恢复通过；E—F 未实施
-related_plans:
-  - 2026-09-14__multicomponent-multiscenario__implementation-plan.md
-  - 2026-09-14__execution__cpu-gpu-runtime__implementation-plan.md
-supersedes: []
+{
+  "type": "work_plan",
+  "status": "active",
+  "plan_kind": "implementation-plan",
+  "owner": "MateriaSim",
+  "module": "materiasim",
+  "domain": "architecture",
+  "created": "2026-09-15",
+  "last_updated": "2026-09-16",
+  "canonical": true,
+  "doc_id": "materiasim.plan.architecture.simulation_package_research_bundles",
+  "source_path": "docs/plans/2026-09-15__architecture__simulation-package-and-research-bundles__implementation-plan.md",
+  "supersedes": [],
+  "superseded_by": [],
+  "related_kb": [
+    "materiasim.kb.platform.capabilities",
+    "materiasim.kb.platform.configuration_components"
+  ],
+  "related_code": [],
+  "rag_exclude": true,
+  "scope": "可安装模拟包、可复用基础组件、场景流程、统一研究包及现有资产的分阶段迁移",
+  "implementation_status": "A—D 历史子集交付，框架 v1 继续覆盖工程契约；E—F 和材料支持不据此自动完成",
+  "original_type": "implementation-plan",
+  "related_plan_files": [
+    "2026-09-14__multicomponent-multiscenario__implementation-plan.md",
+    "2026-09-14__execution__cpu-gpu-runtime__implementation-plan.md"
+  ]
+}
 ---
+
+> 2026-09-16 治理更新：A—D 历史子集交付，框架 v1 继续覆盖工程契约；E—F 和材料支持不据此自动完成。下文原始设计和当时的授权／状态保留为历史，不作为当前执行指令；当前归属与覆盖见[计划审计](MIGRATION_MAP.md)及[知识能力矩阵](../knowledge/platform/capabilities.md)。
 
 # MateriaSim：基础组件、场景流程与研究包实施方案
 
@@ -395,3 +413,10 @@ A、B 先完成职责和真实安装边界；C、D 紧接着交付研究使用�
 框架和研究包完成的可见标准是：用户能安装同一核心、引用共享模型与协议、定义两个以上条件及重复、预览预算、受控执行并获得完整可追溯比较；新增研究主要写研究定义和实验配置，不复制底层流程。
 
 这仍不等于所有材料和场景完成。聚合物、生物大分子、固相和纳米界面必须逐类选择真实模型并验证后发布。本文已进入执行阶段；完成范围以第 1.2 节和具体验收证据为准，目标目录和拟议接口不能当作已实现能力。
+
+
+## Knowledge Extraction（2026-09-16 文档治理）
+
+- 稳定的实际能力与限制归[能力矩阵](../knowledge/platform/capabilities.md)，组件／研究／证据职责归[配置与组件知识](../knowledge/platform/configuration_components.md)。
+- 本文原始阶段、建议和当时验收摘要保留历史，不回写原始 Run；当前覆盖与未决范围见[计划审计](MIGRATION_MAP.md)。
+- 本次只提取与整理文档，不新增本计划对应的材料、引擎或科学验收；部分后继覆盖不视为本计划全部完成。

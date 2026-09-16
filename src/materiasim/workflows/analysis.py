@@ -26,7 +26,7 @@ def selected_requests(spec, request):
 
 
 def analyze_one(root, output_root, spec, manifest, request):
-    """Admit input copy bytes, freeze them externally and dispatch the configured analysis."""
+    """Freeze declared inputs and dispatch analysis; atom mappings are only needed by mapped methods."""
     analyzer = get_analyzer(request["kind"])
     artifacts = resolve_inputs(root, spec, request["stage_id"], analyzer)
     output = output_root / (manifest["run_id"] + "--" + request["id"] + "--" + uuid.uuid4().hex)
@@ -58,8 +58,9 @@ def analyze_one(root, output_root, spec, manifest, request):
         report = analyzer.calculate(private_inputs, request["config"], output, identity)
         report["result_contract"] = result_envelope(report, request, identity)
         report.update(purpose=spec["purpose"], stage_id=request["stage_id"], analysis_request=request,
-                      request_hash=identity["request_hash"], source_schema=spec["schema_version"],
-                      mapping_sha256=frozen["mapping.json"]["sha256"])
+                      request_hash=identity["request_hash"], source_schema=spec["schema_version"])
+        if "mapping" in private_inputs:
+            report["mapping_sha256"] = frozen["mapping.json"]["sha256"]
         write_json(output / "report.json", report)
         write_json(output / "status.json", dict(status="completed", report_sha256=sha256(output / "report.json")))
     except Exception as error:

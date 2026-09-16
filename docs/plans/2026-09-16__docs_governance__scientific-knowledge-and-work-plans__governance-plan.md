@@ -1,29 +1,36 @@
 ---
-type: work_plan
-status: draft
-plan_kind: governance-plan
-owner: MateriaSim
-module: materiasim
-domain: docs_governance
-created: 2026-09-16
-last_updated: 2026-09-16
-canonical: true
-doc_id: materiasim.plan.docs_governance.scientific_knowledge_and_work_plans
-source_path: null
-supersedes: []
-superseded_by: []
-related_kb: []
-related_code:
-  - src/materiasim/analysis/hydration.py
-  - src/materiasim/analysis/component_contacts.py
-  - src/materiasim/specs/purpose.py
-related_guides:
-  - docs/guides/md-workflow-and-tool-boundaries.md
-rag_exclude: true
-code_baseline: 784080f
-scope: 科学知识库、工作计划治理及两者与组件、研究、证据、Agent 工作流的关联
-implementation_status: 仅完成方案；未建立知识库、迁移文档或修改运行行为
+{
+  "type": "work_plan",
+  "status": "completed",
+  "plan_kind": "governance-plan",
+  "owner": "MateriaSim",
+  "module": "materiasim",
+  "domain": "docs_governance",
+  "created": "2026-09-16",
+  "last_updated": "2026-09-16",
+  "canonical": true,
+  "doc_id": "materiasim.plan.docs_governance.scientific_knowledge_and_work_plans",
+  "source_path": "docs/plans/2026-09-16__docs_governance__scientific-knowledge-and-work-plans__governance-plan.md",
+  "supersedes": [],
+  "superseded_by": [],
+  "related_kb": [
+    "materiasim.kb.platform.capabilities",
+    "materiasim.kb.platform.configuration_components"
+  ],
+  "related_code": [
+    "src/materiasim/analysis/hydration.py",
+    "src/materiasim/analysis/component_contacts.py",
+    "src/materiasim/specs/purpose.py"
+  ],
+  "rag_exclude": true,
+  "scope": "科学知识库、工作计划治理及两者与组件、研究、证据、Agent 工作流的关联",
+  "implementation_status": "P0—P4 文档首版已完成；A 批主题覆盖、定向检查通过，详见第 16 节；B/C 批、具体材料及 GPU 科学验收不在完成范围",
+  "original_type": "work_plan",
+  "code_baseline": "784080f"
+}
 ---
+
+> 2026-09-16 实施更新：P0—P4 文档首版完成，具体交付和未覆盖范围见第 16 节。下文设计背景保留；当前归属与覆盖见[计划审计](MIGRATION_MAP.md)及[知识能力矩阵](../knowledge/platform/capabilities.md)。
 
 # MateriaSim 科学知识库与工作计划增补方案
 
@@ -41,7 +48,7 @@ implementation_status: 仅完成方案；未建立知识库、迁移文档或修
                     新问题与修订 ← 经审查的运行证据与结论
 ```
 
-本轮只新增本方案。后续实施须另行授权；不迁移文件、不新增依赖、不安装知识库服务、不改变科学参数、不运行 MD、不提交或推送 Git。README 和 MD 流程指南已有的未提交改动原样保留。
+方案编写时仅新增本文件；随后用户授权先 commit 备份再实施。已提交备份 a044693 并完成第 16 节的文档首版；没有迁移原始数据、新增依赖、改变科学参数、运行 MD 或推送。
 
 知识库可以先建立，不必等待选定具体聚合物或纳米材料。但具体材料的参数、可用协议和科学验证结论，必须等待实际模型与证据，不能由通用知识页代替。
 
@@ -412,7 +419,7 @@ P0—P4 是本方案的首版交付范围。B 批是后续科学参考扩展，C
 
 控制方式：按上述独立状态和证据维度记录，先把 A 批和已实现接触分析做实，再扩展材料知识；优先链接现有资产，不复制；保留明确未完成清单。
 
-本轮只增加一份计划，没有需要迁移的数据。后续迁移先列清单、核对链接和来源，再经授权操作；回退只针对本轮或对应实施批次的文档改动，不使用仓库重置或覆盖用户改动。知识提取、哈希和 Git 提交均不自动授权删除原文件。
+方案编写阶段只新增此计划；实施阶段按范围新增知识并整理文档，原计划保留路径，未迁移数据。后续迁移先列清单、核对链接和来源，再经授权操作；回退只针对对应实施批次的改动，不使用仓库重置或覆盖用户改动。知识提取、哈希和 Git 提交均不自动授权删除原文件。
 
 ### 当前执行清单
 
@@ -420,10 +427,10 @@ P0—P4 是本方案的首版交付范围。B 批是后续科学参考扩展，C
 - [x] 核对 MateriaSim 的实际文档和能力边界。
 - [x] 将五类内容转为知识主题、工具提供者、参数／资产归属和实现证据等关联维度。
 - [x] 形成此增补方案。
-- [ ] 执行 P0—P4，建立并验收首版知识库与计划治理。
+- [x] 执行 P0—P4，建立并验收首版知识库与计划治理；具体证据见第 16 节。
 - [ ] 按需求继续 B 批材料知识及 C 批具体科学验证。
 
-**结论：已具备开始文档体系建设的条件；这份方案完成不代表知识库已建立，更不代表新的材料模拟或科学验收已完成。**
+**结论：知识库与工作计划首版已建立；文档交付不代表新的材料模拟或科学验收已完成。**
 
 ## 15. 调研来源与阅读范围
 
@@ -448,3 +455,20 @@ P0—P4 是本方案的首版交付范围。B 批是后续科学参考扩展，C
 本方案使用的 GROMACS 体系准备、RDF、MSD 官方页面和 NIST 采样最佳实践记录已在对应段落引用。资料查阅日期为 2026-09-16；当时 GROMACS `current` 页显示 2026.3。正式知识条目仍须按具体论点补充版本定位、论文主文／SI 和数据审查。
 
 更多建模与分析工具的既有调研入口保留在[MD 流程与工具边界指南](../guides/md-workflow-and-tool-boundaries.md)。本轮不声称已逐一验证这些上游项目的运行环境、算法实现或与 MateriaSim 的兼容性。
+
+
+## 16. Knowledge Extraction 与首版收口（2026-09-16）
+
+用户授权先 commit 再实施；已建立备份 a044693，未推送。本次完成本计划 P0—P4 的文档首版，并明确以下边界。
+
+| 阶段 | 实际交付 | 验收定位 |
+|---|---|---|
+| P0 | 六份计划盘点、旧状态覆盖审计、路径保留 | [计划迁移表](MIGRATION_MAP.md) |
+| P1 | 工作计划规则／索引／模板，知识入口／索引／维护与模板 | [计划入口](README.md)、[知识入口](../knowledge/README.md) |
+| P2 | 13 篇科学／平台主题页及 2 篇治理记录，16 个一手来源登记；A 批全部主题覆盖 | [知识索引](../knowledge/INDEX.md)、[来源登记](../knowledge/references/sources.json) |
+| P3 | 指南知识映射、能力矩阵、AGENTS／两项 Skill 路由、旧计划回写 | [知识提取映射](../knowledge/governance/migration_map.md) |
+| P4 | 文档、现有几何算法定向测试、技能格式验证与六个检索问题 | [首版验收](../validation/2026-09-16__knowledge-work-plans-acceptance.md) |
+
+稳定科学定义在知识页，操作在指南，资产留 catalog，实际行为留代码；原方案公式与未实现设计保留为历史示例，不再独立维护。机器可校验文档头采用 JSON（YAML 1.2 子集），无需新增 YAML 依赖；没有创建空目录或 RAG 服务。
+
+未完成／不在首版范围：B 批完整的聚合物、生物大分子、纳米／固相专题；C 批具体材料参数与科学基准；Linux/GPU、长负载和充分采样验收。当前来源审阅不是独立专家认证，不能把知识 current 当生产审批。上述后续范围仍由材料主线及对应验证任务推进，不以本方案 completed 隐含取消。

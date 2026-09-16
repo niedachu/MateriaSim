@@ -94,8 +94,10 @@ Scientific traceability and reproducibility take priority over runtime and code 
 
 ## 文档与证据归属
 
-- `docs/plans/` 是工作区方案的唯一规范目录；不另建第二套工作计划树。新方案用日期和主题命名，至少记录状态、创建/更新时间、范围及是否实施。
-- 探索假设与稳定知识分开维护：未来需要时分别使用 `docs/ideas/`、`docs/knowledge/`；当前没有内容则不创建空目录。
+- `docs/plans/` 是唯一计划根，新增或更新计划先读[计划规则](docs/plans/README.md)，同步 INDEX 与 MIGRATION_MAP；完成时填写 Knowledge Extraction，不把历史设计当当前能力。
+- 稳定科学与平台知识归 [docs/knowledge](docs/knowledge/README.md)，维护先读[知识规则](docs/knowledge/governance/maintenance.md)。探索假设需要时放 `docs/ideas/`，不创建空目录。
+- 研究设计、专业解释或算法修改，先查[能力矩阵](docs/knowledge/platform/capabilities.md)及相关科学主题，再核对实际代码和官方文档／原始文献；记录版本与主文、SI、数据的实际阅读范围，不脑补专业结论。
+- 科学知识的 current/source_checked 不等于材料适用性批准或本地实测。参数、协议与输出仍归 catalog／研究配置／Run；知识标签不得生成 accepted 用途证据或自动扩大执行权限。
 - README 说明实际入口；AGENTS 规定边界；Skill 指导操作；方案说明未实施设计；正式结论必须链接原始来源或具体运行证据。
 - 文档迁移保留来源与替代关系，不制造两个可独立修改的规范副本。已有索引在新增/迁移文档时同步；普通运行不改知识库、索引或研究笔记。
 - 本地运行使用明确存储位置，不硬编码某个外置盘。新模拟 Run 的轨迹、日志、检查点不放源码中；历史输出暂留原处，不因新规则自动搬移或删除。

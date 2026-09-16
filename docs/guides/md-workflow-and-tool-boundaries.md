@@ -10,7 +10,11 @@ code_baseline: 784080f
 
 # MD 模拟工作流程与工具边界指南
 
+本页保留完整流程与工具路线。科学定义的规范维护位置是[知识库](../knowledge/README.md)：[模型兼容](../knowledge/models/force_field_compatibility.md)、[协议算法](../knowledge/algorithms/integration_constraints.md)、[分析定义](../knowledge/algorithms/contacts.md)及[证据层次](../knowledge/verification/evidence_levels.md)。当前实现状态查[能力矩阵](../knowledge/platform/capabilities.md)。下文候选工具仍不等于已接入。
+
 ## 1. 先说结论：我们应该做什么，不应该重写什么
+
+材料决策入口已补充：[聚合物](../knowledge/models/polymer_identity_and_building.md)、[生物大分子](../knowledge/models/biomolecular_preparation.md)、[溶剂盐](../knowledge/models/solvent_ion_models.md)、[固相／颗粒](../knowledge/models/solid_surface_nanoparticle_models.md)、[界面](../knowledge/scenarios/interfaces_and_confined_systems.md)、[粗粒化](../knowledge/models/coarse_graining_and_transferability.md)。正式研究前使用 [C0 清单](../knowledge/templates/specialized.md)；这些是参考知识，不代表功能接入或科学验收完成。
 
 MateriaSim 应当成为“研究定义、模型资产、场景构建、协议选择、执行和证据管理”的组织层，而不是重新实现一个 GROMACS。
 
@@ -97,13 +101,7 @@ MateriaSim 的相互作用包应记录“哪些精确模型组合，在什么条
 - 场景：均匀溶液、单链、熔体、晶体、薄膜、固液界面等。
 - 制备过程：从什么初态，经过什么平衡路径得到目标状态。
 
-数量必须最终解析为整数，并保存请求值、实际值、换算依据及偏差。以摩尔浓度为例：
-
-\[
-N_i \approx c_i N_A V,\qquad V[\mathrm{L}]=V[\mathrm{nm}^3]\times10^{-24}.
-\]
-
-这是数量换算关系，不是本项目当前已有的浓度接口。整数化、电中性、其他溶质和实际体积必须联合检查；NPT 后体积会变化，初始按盒体积得到的浓度不等于最终平均浓度。质量分数不能直接当成分子数分数，目标密度也不是装填成功就自动成立。
+数量必须最终解析为整数，保存请求值、实际值、依据及偏差；浓度、质量分数、整数化及 NPT 体积口径的规范定义见[单位与组成](../knowledge/foundations/units_composition.md)。这些换算知识不是当前已有的浓度接口，目标密度也不是装填成功就自动成立。
 
 特别注意两个原生工具的真实边界：
 

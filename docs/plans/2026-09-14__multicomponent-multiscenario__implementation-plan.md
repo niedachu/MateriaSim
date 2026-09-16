@@ -1,16 +1,33 @@
 ---
-type: implementation-plan
-status: active
-plan_kind: implementation-plan
-created: 2026-09-14
-last_updated: 2026-09-15
-revision: 5
-owner: materials_simulation
-scope: 多组分液体、聚合物溶液与熔体、选定固相与界面；模型约束、运行重构及分层验收
-implementation_status: M1/M2 及 M3a 已有 ZIL/CAT/ANI 自动装配子集通过 macOS CPU 工程验收；混合溶剂未实现，M3 整体未完成，M4—M6 未实施；Linux 与科学验证未完成
-parent_plan: 2026-09-14__multicomponent-simulation__upgrade-plan.md
-supersedes: []
+{
+  "type": "work_plan",
+  "status": "active",
+  "plan_kind": "implementation-plan",
+  "owner": "materials_simulation",
+  "module": "materiasim",
+  "domain": "multicomponent_multiscenario",
+  "created": "2026-09-14",
+  "last_updated": "2026-09-16",
+  "canonical": true,
+  "doc_id": "materiasim.plan.multicomponent_multiscenario.implementation",
+  "source_path": "docs/plans/2026-09-14__multicomponent-multiscenario__implementation-plan.md",
+  "supersedes": [],
+  "superseded_by": [],
+  "related_kb": [
+    "materiasim.kb.platform.capabilities",
+    "materiasim.kb.platform.configuration_components"
+  ],
+  "related_code": [],
+  "rag_exclude": true,
+  "scope": "多组分液体、聚合物溶液与熔体、选定固相与界面；模型约束、运行重构及分层验收",
+  "implementation_status": "M1/M2/M3a 既有小分子子集已交付；混合溶剂、M4—M6、Linux 与科学验证仍未完成",
+  "original_type": "implementation-plan",
+  "revision": 5,
+  "parent_plan": "2026-09-14__multicomponent-simulation__upgrade-plan.md"
+}
 ---
+
+> 2026-09-16 治理更新：M1/M2/M3a 既有小分子子集已交付；混合溶剂、M4—M6、Linux 与科学验证仍未完成。下文原始设计和当时的授权／状态保留为历史，不作为当前执行指令；当前归属与覆盖见[计划审计](MIGRATION_MAP.md)及[知识能力矩阵](../knowledge/platform/capabilities.md)。
 
 # 多组分＋多场景：项目实施与分层验收方案
 
@@ -639,3 +656,10 @@ PEG/PEO、二氧化硅或金属晶体仅是候选方向，不能从本方案推�
 | [atomate2 工作流设计](https://github.com/materialsproject/atomate2/blob/main/docs/dev/workflow_tutorial.md) | 流程、输入生成和结构化结果分离 | 当前就需要整套数据库/调度框架 |
 | [Merz 与 Shirts，2018](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0202764)、[Grossfield 等，2018](https://livecomsjournal.org/article/5067-best-practices-for-quantification-of-uncertainty-and-sampling-quality-in-molecular-simulations-article-v1-0) | 物理检查、采样不确定度与工程状态分开 | 短测无报错足以发表科研结论 |
 | [Martini 3，2021](https://www.nature.com/articles/s41592-021-01098-3) | 粗粒化作为另一个模型路线，后续专项 | 粗粒化是全原子模拟的通用加速开关 |
+
+
+## Knowledge Extraction（2026-09-16 文档治理）
+
+- 稳定的实际能力与限制归[能力矩阵](../knowledge/platform/capabilities.md)，组件／研究／证据职责归[配置与组件知识](../knowledge/platform/configuration_components.md)。
+- 本文原始阶段、建议和当时验收摘要保留历史，不回写原始 Run；当前覆盖与未决范围见[计划审计](MIGRATION_MAP.md)。
+- 本次只提取与整理文档，不新增本计划对应的材料、引擎或科学验收；部分后继覆盖不视为本计划全部完成。

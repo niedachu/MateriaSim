@@ -5,6 +5,7 @@ from typing import Callable
 
 from materiasim.analysis.hydration import hydration_contacts
 from materiasim.analysis.component_contacts import component_contacts
+from materiasim.analysis.density import density_observations, mass_density, validate_density
 from materiasim.errors import MateriaSimError
 from materiasim.specs.analysis import analysis_requests, validate_contacts
 from materiasim.specs.schema import validate_analysis
@@ -41,6 +42,11 @@ def calculate_components(inputs, config, output, identity):
 
 
 ANALYZERS = {
+    "mass_density": Analyzer("mass_density", validate_density, mass_density, (("energy", "edr"),),
+        (("density_volume.csv", "csv_sha256"), ("density_volume.xvg", "xvg_sha256"),
+         ("extract-energy/command.json", "command_sha256"), ("extract-energy/stdout.log", "stdout_sha256"),
+         ("extract-energy/stderr.log", "stderr_sha256")),
+        (("mean_density_kg_m3", "kg/m^3"), ("mean_volume_nm3", "nm^3")), density_observations),
     "hydration_contacts": Analyzer("hydration_contacts", validate_analysis, calculate_hydration, CONTACT_INPUTS,
         (("hydration_counts.csv", "csv_sha256"),), (("mean_union_water_contacts", "water_molecules"),), hydration_observations),
     "component_contacts": Analyzer("component_contacts", validate_contacts, calculate_components, CONTACT_INPUTS,

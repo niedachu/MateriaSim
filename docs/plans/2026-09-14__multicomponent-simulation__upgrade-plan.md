@@ -1,12 +1,32 @@
 ---
-type: project-upgrade-proposal
-status: active
-created: 2026-09-14
-last_updated: 2026-09-14
-revision: 5
-scope: macOS/Linux 多场景、多组分分子模拟
-implementation_status: P1a 最小框架已实现并通过 Mac CPU 工程验收；Linux 与后续阶段待实施或验收
+{
+  "type": "work_plan",
+  "status": "active",
+  "plan_kind": "architecture-plan",
+  "owner": "MateriaSim",
+  "module": "materiasim",
+  "domain": "multicomponent_simulation",
+  "created": "2026-09-14",
+  "last_updated": "2026-09-16",
+  "canonical": true,
+  "doc_id": "materiasim.plan.multicomponent_simulation.upgrade",
+  "source_path": "docs/plans/2026-09-14__multicomponent-simulation__upgrade-plan.md",
+  "supersedes": [],
+  "superseded_by": [],
+  "related_kb": [
+    "materiasim.kb.platform.capabilities",
+    "materiasim.kb.platform.configuration_components"
+  ],
+  "related_code": [],
+  "rag_exclude": true,
+  "scope": "macOS/Linux 多场景、多组分分子模拟",
+  "implementation_status": "历史 P1a 工程子集已实现；后续材料主线转交 M1—M6，整体材料目标未完成",
+  "original_type": "project-upgrade-proposal",
+  "revision": 5
+}
 ---
+
+> 2026-09-16 治理更新：历史 P1a 工程子集已实现；后续材料主线转交 M1—M6，整体材料目标未完成。下文原始设计和当时的授权／状态保留为历史，不作为当前执行指令；当前归属与覆盖见[计划审计](MIGRATION_MAP.md)及[知识能力矩阵](../knowledge/platform/capabilities.md)。
 
 # 多场景、多组分分子模拟平台升级方案
 
@@ -661,7 +681,7 @@ LAMMPS 如果被 P3 的材料模型所必需，应在 P3 内实施，不能拖�
 
 ### 12.3 近期交付：P1a 最小可运行框架
 
-**2026-09-14 实施更新**：P0 源哈希基线核对和 P1a 的 Mac CPU 工程闭环已完成。实际交付采用 JSON + 标准库核心、可导入包与 `python -m` 入口，未安装新依赖；未创建大型长期目录树或发行包。现有 ZIL + 2,957 水、8,910 原子的 EM/NVT/NPT/短采样、640→1,000 步 NVT 检查点续跑、跨目录输入隔离以及 21 帧新旧计数对照均有实测证据；新框架 22 项测试和旧分析核心 5 项测试通过。Linux、CAT/ANI 共用核心、硬杀/断电及父 Run 派生等仍待后续工作，整体升级未完成。详见 [Mac 框架验收记录](../../materials_simulation/docs/2026-09-14__mac-framework-acceptance.md)，不能由短轨迹宣称体系已平衡。
+**2026-09-14 实施更新**：P0 源哈希基线核对和 P1a 的 Mac CPU 工程闭环已完成。实际交付采用 JSON + 标准库核心、可导入包与 `python -m` 入口，未安装新依赖；未创建大型长期目录树或发行包。现有 ZIL + 2,957 水、8,910 原子的 EM/NVT/NPT/短采样、640→1,000 步 NVT 检查点续跑、跨目录输入隔离以及 21 帧新旧计数对照均有实测证据；新框架 22 项测试和旧分析核心 5 项测试通过。Linux、CAT/ANI 共用核心、硬杀/断电及父 Run 派生等仍待后续工作，整体升级未完成。详见 [Mac 框架验收记录](../validation/2026-09-14__mac-framework-acceptance.md)，不能由短轨迹宣称体系已平衡。
 
 **目标**：不改变已有科研参数和旧入口，以现有 ZIL + 水案例验证新核心能够独立完成一个短程闭环。首轮不同时实现聚合物和纳米材料。
 
@@ -798,3 +818,10 @@ Run 报告应列出“重建体系”“断点续跑”“重新分析”各需�
 [^24]: GROMACS 开发团队. [Installation guide，2026.3](https://manual.gromacs.org/current/install-guide/index.html)。用于 Apple OpenCL、Linux GPU 及编译环境边界。
 
 [^25]: GROMACS 开发团队. [gmx grompp，2026.3](https://manual.gromacs.org/current/onlinehelp/gmx-grompp.html)。访问于 2026-09-14。用于实际 include/宏依赖、预处理拓扑 `-pp`、处理后 MDP `-po` 与输入快照边界。
+
+
+## Knowledge Extraction（2026-09-16 文档治理）
+
+- 稳定的实际能力与限制归[能力矩阵](../knowledge/platform/capabilities.md)，组件／研究／证据职责归[配置与组件知识](../knowledge/platform/configuration_components.md)。
+- 本文原始阶段、建议和当时验收摘要保留历史，不回写原始 Run；当前覆盖与未决范围见[计划审计](MIGRATION_MAP.md)。
+- 本次只提取与整理文档，不新增本计划对应的材料、引擎或科学验收；部分后继覆盖不视为本计划全部完成。
