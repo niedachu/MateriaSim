@@ -11,6 +11,7 @@
 | [框架 v1](2026-09-15__framework__extensible-core-v1__implementation-plan.md) | materiasim-framework-extensible-core-v1-20260915 | 保留原 ID 和本地完成状态；Linux/GPU、长负载、新材料和科学验证不包含在完成范围 |
 | [知识治理](2026-09-16__docs_governance__scientific-knowledge-and-work-plans__governance-plan.md) | materiasim.plan.docs_governance.scientific_knowledge_and_work_plans | 本次首版建设主计划；B/C 为后续，不自动完成 |
 | [B/C 补充研究](2026-09-16__scientific_knowledge__materials-and-validation-bc__research-plan.md)（2026-09-16 新增，无迁移来源） | materiasim.plan.scientific_knowledge.materials_and_validation_bc | 承接 B 通用参考、C0 验证准备与 C1—C4 实证主线；§16–17 续行密度接入与乙醇来源获取，规范定义提取至知识映射，状态见计划；无迁移或替代 |
+| [插件化研究 Harness](2026-09-17__harness__plugin-research-automation__architecture-plan.md)（2026-09-17 新增，无迁移来源） | materiasim.plan.harness.plugin_research_automation | 复用本地核心，不替代材料／B/C／服务器计划；同日 §13 二次审查细化契约、撤销、恢复、环境与证据闭包并回填 H0—H4 验收；仅文档，无迁移／替代 |
 
 部分覆盖用本表及计划审计说明表达，不用 supersedes 错误宣称旧计划全部被替代；本批没有整份文档的替代／删除。source_path 保存原仓库路径，Git 保留原文头部。
 

@@ -11,5 +11,6 @@
 | 本地框架 | [可扩展核心 v1](2026-09-15__framework__extensible-core-v1__implementation-plan.md) | 已交付范围限定于本地框架 |
 | 知识与计划治理 | [科学知识与计划](2026-09-16__docs_governance__scientific-knowledge-and-work-plans__governance-plan.md) | P0—P4 首版；B/C 批后续 |
 | 材料知识与科学验证 | [B/C 批补充研究方案](2026-09-16__scientific_knowledge__materials-and-validation-bc__research-plan.md) | B 批专题、C0；乙醇＋水密度接入及来源获取见 §16–17，状态以方案为准 |
+| 插件与无人值守研究 | [插件化研究 Harness](2026-09-17__harness__plugin-research-automation__architecture-plan.md) | H0—H6 拟议工作；§13 二次审查补充权限撤销、恢复事务、真实组合、数据边界及故障验收，非已实现能力 |
 
 [规则](README.md) · [迁移／覆盖审计](MIGRATION_MAP.md) · [模板](templates/work_plan.md) · [当前能力](../knowledge/platform/capabilities.md)
