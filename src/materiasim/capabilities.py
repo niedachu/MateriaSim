@@ -7,7 +7,11 @@ from materiasim.scenarios.registry import SCENARIOS
 
 def capabilities():
     """Return static component contracts without probing tools or claiming environmental/scientific success."""
+    from materiasim.plugins.builtin import catalog
     return dict(contract_version=1,
+                campaign=dict(contract_version=3, modes=["local_rules", "local_agent_decisions"], device="cpu",
+                              purpose="engineering_smoke", capabilities=list(catalog()),
+                              external_agent=False, local_agent_protocol=True, dynamic_plugins=False, active_relocation=False),
                 engines=[dict(id=item.id, purposes=list(item.purposes), implementation="implemented")
                          for item in ENGINES.values()],
                 scenarios=[dict(id=item.id, engines=list(item.engines), dependencies=list(item.dependencies),

@@ -11,6 +11,7 @@ from materiasim.specs.schema import identifier
 from materiasim.research.plan import external_output, load_plan
 from materiasim.research.resources import GRACE_SECONDS, storage_bytes, supervise
 from materiasim.runtime.state import verify_run
+from materiasim.errors import MateriaSimError
 
 
 def register(plan_root, output, gmx, packmol):
@@ -125,6 +126,10 @@ def perform(batch, plan, ledger, index, action):
                            or result["storage_bytes"] >= limits["storage_bytes"])
     write_json(batch / "ledger.json", ledger)
     if result["returncode"] != 0 or result["stop_reason"] is not None:
+        if (action in ("run", "resume") and not ledger["exhausted"] and
+                task_state(batch, plan["tasks"][index], ledger["tasks"][index]) == "interrupted"):
+            raise MateriaSimError("RUN_INTERRUPTED", "Verified interrupted Run requires explicit recovery",
+                                  category="interruption", evidence_refs=[str(batch / "events" / event_id)])
         raise RuntimeError(f"Batch stopped after {action}; inspect {batch / 'events' / event_id}")
 
 
@@ -149,8 +154,12 @@ def recover_handoff(batch, plan, ledger, resume):
     write_json(batch / "ledger.json", ledger)
 
 
-def run(plan_root, output, gmx="gmx", packmol="packmol", resume=False):
-    """Run serially or explicitly resume; identical completed plans never launch duplicate tasks."""
+def run(plan_root, output, gmx="gmx", packmol="packmol", resume=False, before_operation=None):
+    """Run serially; an optional local boundary callback may stop before any new core operation.
+
+    The callback receives task ID and action, returns nothing, or raises to stop.
+    It cannot replace task data, numerical execution or the existing budget ledger.
+    """
     batch = register(plan_root, output, gmx, packmol)
     with run_lock(batch):
         # An orphan worker keeps this guard until it finishes; do not race its evidence.
@@ -160,18 +169,20 @@ def run(plan_root, output, gmx="gmx", packmol="packmol", resume=False):
         if ledger["exhausted"]:
             raise ValueError("Batch resources exhausted; no implicit budget expansion")
         for index, (task, record) in enumerate(zip(plan["tasks"], ledger["tasks"])):
-            advance_task(batch, plan, ledger, index, task, record, resume)
+            advance_task(batch, plan, ledger, index, task, record, resume, before_operation)
     return status(batch)
 
 
-def advance_task(batch, plan, ledger, index, task, record, resume):
-    """Advance one registered ordinary Run, stopping at the first unresolved operation."""
+def advance_task(batch, plan, ledger, index, task, record, resume, before_operation=None):
+    """Advance a registered Run, calling the supplied admission gate before each core action."""
     from materiasim.research.compare import task_reports
     state = task_state(batch, task, record)
     history = [e for e in ledger["events"] if e["index"] == index]
     if state == "not_started":
         if history:
             raise ValueError("Prior task operation has no Run evidence; refusing duplicate build")
+        if before_operation is not None:
+            before_operation(task["id"], "build")
         perform(batch, plan, ledger, index, "build")
         state = task_state(batch, task, record)
     if state in ("ready", "interrupted"):
@@ -185,8 +196,14 @@ def advance_task(batch, plan, ledger, index, task, record, resume):
         spec = read_json(root / "resolved_spec.json")
         if max(attempts, actual) >= task_limits(plan["research"], spec)["max_attempts"]:
             raise ValueError("Run attempt budget exhausted")
-        perform(batch, plan, ledger, index, "resume" if state == "interrupted" else "run")
+        action = "resume" if state == "interrupted" else "run"
+        if before_operation is not None:
+            before_operation(task["id"], action)
+        perform(batch, plan, ledger, index, action)
         state = task_state(batch, task, record)
+    if state == "interrupted":
+        raise MateriaSimError("RUN_INTERRUPTED", "Verified interrupted Run requires explicit recovery",
+                              category="interruption", evidence_refs=[str(batch / "runs" / record["run_id"])])
     if state != "completed":
         raise ValueError(f"Batch stopped at {task['id']}: {state}; no automatic retry")
     spec = read_json(batch / "runs" / record["run_id"] / "resolved_spec.json")
@@ -197,5 +214,7 @@ def advance_task(batch, plan, ledger, index, task, record, resume):
     if not reports:
         if any(e["action"] == "analyze" for e in history):
             raise ValueError("Previous analysis has no complete evidence; refusing automatic retry")
+        if before_operation is not None:
+            before_operation(task["id"], "analyze")
         perform(batch, plan, ledger, index, "analyze")
     task_reports(batch, task, record, required=True)

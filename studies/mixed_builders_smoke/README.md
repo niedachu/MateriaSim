@@ -1,5 +1,7 @@
 # 双构建场景、双分析的工程研究示例
 
+[automation.json](automation.json) 可交给[本地规则 Harness](../../docs/guides/harness.md)，经独立用户授权后运行；不因侧车存在就自动启动或扩大用途。
+
 这是 Research v2 的可执行工程输入，不是新的材料科学研究结论。
 
 - 预建 CAT×1/ANI×1 水盒与自动装填 CAT×2/ANI×2 水盒，每种两次显式重复。

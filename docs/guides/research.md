@@ -1,5 +1,7 @@
 # 研究包使用指南
 
+固定研究定义可以通过新[本地规则 Harness](harness.md)冻结、后台监督和用户控制；它复用以下研究引擎，不扩大材料、用途或资源限制。
+
 研究源码按 `studies/<id>/README.md`、`research.json`、`experiments/` 组织，调用同一个模拟核心，不复制构建器或 runner。通用 v2 示例是 [mixed_builders_smoke](../../studies/mixed_builders_smoke/README.md)；原 [zil_count_smoke](../../studies/zil_count_smoke/research.json) 保留为 v1 来源。
 
 ## 已实现范围

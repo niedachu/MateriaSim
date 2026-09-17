@@ -8,7 +8,7 @@
   "canonical": true,
   "owner": "MateriaSim",
   "created": "2026-09-16",
-  "last_updated": "2026-09-16",
+  "last_updated": "2026-09-18",
   "scope": "当前代码与历史工程证据的范围；非新平台验收",
   "source_refs": [],
   "related_code": [
@@ -58,6 +58,9 @@
 | 混合溶剂、通用盐配方 | 参数与构建接入 | 未实现 | [组成定义](../foundations/units_composition.md)、[材料扩展主线](../../plans/2026-09-14__multicomponent-multiscenario__implementation-plan.md) |
 | 聚合物、生物大分子、纳米材料、固相／界面 | 专属模型与构建路线 | 未形成受支持功能 | [场景决策](../scenarios/multicomponent_solutions.md)，不能用无水周期盒冒充 |
 | 文献与知识检索 | Markdown、来源登记、文本搜索 | A 首版＋B 通用专题、C0 清单 | [知识索引](../INDEX.md)；没有自动 RAG、材料批准或新增模拟后端 |
+| 本地规则 Campaign | 现有注册表依赖解析＋SQLite＋POSIX 监督 | CPU engineering_smoke，Mac 闭环和故障专项已实测 | [指南](../../guides/harness.md)、[9 Run 闭环](../../validation/2026-09-17__harness-local-hardening.md)、[进程／满盘专项](../../validation/2026-09-17__harness-crash-storage-acceptance.md)；安全子操作暂停、检查点续跑、证据审计及监督连接丢失保护；实际重启／注销／断电、Linux/GPU 和长负载仍待验 |
+| 本地 agent 决策协议 | Campaign v3＋Decision v2＋现有执行核心 | 本地代码和脚本 provider 工程验收完成 | [接口指南](../../guides/harness-agent.md)、[5 Run／285 测试](../../validation/2026-09-18__harness-local-agent-acceptance.md)；受限摘要、逐操作许可、超时与人工接管，不含真实模型和 OS 隔离 |
+| 真实模型／DeepSeek 与动态插件 | 候选宿主和能力接入 | 未接入／未验收 | [计划状态](../../plans/2026-09-17__harness__plugin-research-automation__architecture-plan.md)；本地结构化协议不等于模型自主研究或认证沙箱 |
 
 ## 使用规则
 

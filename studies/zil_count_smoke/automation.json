@@ -1,0 +1,7 @@
+{
+  "contract_version": 1,
+  "id": "zil_count_smoke_rules",
+  "target": {"kind": "research", "path": "research.json"},
+  "capabilities": ["engine:gromacs", "scenario:packed_liquid", "builder:gromacs_packmol", "analyzer:component_contacts"],
+  "allow_resume": true
+}

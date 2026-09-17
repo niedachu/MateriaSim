@@ -4,6 +4,7 @@ import argparse
 import importlib.metadata
 import json
 import platform
+import sqlite3
 import sys
 import subprocess
 from pathlib import Path
@@ -32,6 +33,8 @@ def parser():
     commands = result.add_subparsers(dest="action", required=True)
     from materiasim.research.cli import add_commands
     add_commands(commands)
+    from materiasim.harness.cli import add_commands as add_campaign_commands
+    add_campaign_commands(commands)
     doctor = commands.add_parser("doctor", help="Read-only native environment check")
     doctor.add_argument("--gmx", default="gmx")
     doctor.add_argument("--packmol", help="Explicitly check the optional native packing tool")
@@ -78,7 +81,10 @@ def dispatch(args):
             dict(action=name, read_only=name in ("doctor", "capabilities", "tools", "validate", "migrate", "status", "report", "verify-archive"))
             for name in ("doctor", "capabilities", "tools", "validate", "migrate", "build", "run", "resume", "status", "analyze", "report", "archive", "verify-archive")],
             research=dict(read_only=["validate", "status", "compare without --output-root", "plan without --output"],
-                          writes=["run", "plan --output", "compare --output-root"]))
+                          writes=["run", "plan --output", "compare --output-root"]),
+            campaign=dict(read_only=["plugins", "preflight", "status", "evidence", "validate-decision"],
+                          writes=["create", "run", "start", "reconcile", "pause", "resume", "cancel", "revoke",
+                                  "agent-read", "submit-decision", "human-decision", "agent-tick"]))
     if args.action == "archive":
         from materiasim.workflows.archive import export_archive
         return export_archive(args.run_dir, args.output, args.max_bytes)
@@ -88,6 +94,9 @@ def dispatch(args):
     if args.action == "research":
         from materiasim.research.cli import dispatch as research_dispatch
         return research_dispatch(args)
+    if args.action == "campaign":
+        from materiasim.harness.cli import dispatch as campaign_dispatch
+        return campaign_dispatch(args)
     if args.action == "doctor":
         versions = {}
         for name in ("MDAnalysis", "numpy"):
@@ -152,7 +161,7 @@ def main(argv=None):
         if args.json_envelope:
             result = dict(contract_version=1, ok=True, action=args.action, result=result)
         print(json.dumps(result, indent=2, ensure_ascii=False, allow_nan=False))
-    except (ValueError, OSError, RuntimeError, subprocess.SubprocessError) as error:
+    except (ValueError, OSError, RuntimeError, subprocess.SubprocessError, sqlite3.Error) as error:
         print(json.dumps(error_record(error), ensure_ascii=False, allow_nan=False), file=sys.stderr)
         return 1
     return 0

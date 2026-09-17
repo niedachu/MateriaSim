@@ -1,5 +1,7 @@
 # ZIL 数量与重复编排工程验收
 
+[automation.json](automation.json) 声明固定能力及恢复意向；本地规则执行还需用户独立授权，见[Harness 指南](../../docs/guides/harness.md)。侧车不修改物理协议。
+
 问题：同一核心能否按声明执行两个条件、四个有明确种子的 Run，并完整保留成功/失败与分析来源？
 
 [research.json](research.json) 是唯一研究定义；[count_2](experiments/count_2.json) 与 [count_4](experiments/count_4.json) 分别使用 2/4 个 ZIL，每条件两次重复。固定 4.5 nm 周期盒、两个装填区域、现有 ZIL/TIP3P 参数包和短程协议；实际种子、预算、预期与失败判据均在定义中。

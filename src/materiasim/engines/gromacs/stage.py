@@ -11,6 +11,7 @@ from materiasim.engines.gromacs.compile import verify_native_prepared
 from materiasim.engines.gromacs.mdp import mdp_values
 from materiasim.engines.gromacs.topology import gro_atoms
 from materiasim.runtime.process import CommandFailed
+from materiasim.errors import MateriaSimError
 
 
 def check_numerics(log):
@@ -18,7 +19,8 @@ def check_numerics(log):
     # Infinite reaction-field dielectric is an input convention, not a computed energy.
     checked = re.sub(r"^\s*epsilon-rf\s*=\s*inf\s*$", "", log, flags=re.M)
     if re.search(r"LINCS WARNING|constraint failure|\bnan\b|\binf\b", checked, re.I):
-        raise ValueError("Numerical warning or nonfinite result in GROMACS log")
+        raise MateriaSimError("NUMERICAL_FAILURE", "Numerical warning or nonfinite result in GROMACS log",
+                              category="numerical")
 
 
 def assess_stage(root, stage, engine):
@@ -30,7 +32,8 @@ def assess_stage(root, stage, engine):
         gro_atoms(folder / "md.gro")
         match = re.search(r"converged to Fmax <\s*([\d.eE+-]+) in\s+(\d+) steps", log)
         if not match:
-            raise ValueError("Energy minimization did not meet its force criterion")
+            raise MateriaSimError("MINIMIZATION_NOT_CONVERGED", "Energy minimization did not meet its force criterion",
+                                  category="numerical", evidence_refs=[str(folder / "md.log")])
         return dict(complete=True, actual_steps=int(match.group(2)), fmax_threshold=float(match.group(1)))
     actual = checkpoint(engine, folder / "md.cpt")
     expected_atoms = read_json(root / "build/atom_mapping.json")["atom_count"]

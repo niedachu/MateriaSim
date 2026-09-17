@@ -1,0 +1,7 @@
+{
+  "contract_version": 1,
+  "id": "mixed_builders_smoke_rules",
+  "target": {"kind": "research", "path": "research.json"},
+  "capabilities": ["engine:gromacs", "scenario:prebuilt_mixture_water", "scenario:packed_liquid", "builder:gromacs_prebuilt", "builder:gromacs_packmol", "analyzer:component_contacts", "analyzer:hydration_contacts"],
+  "allow_resume": true
+}
